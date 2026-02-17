@@ -15,6 +15,7 @@ Il percorso CKAD è diviso in argomenti principali. Ogni argomento ha una pagina
 7. [Pod Design](./ckad_pod_design.md)
 8. [Security](./ckad_security.md)
 9. [Cheatsheet / Keymap](./ckad_cheatsheet.md)
+10. [Soluzione Esercizi](./ckad_sol_esercizi.md)
 
 ---
 

@@ -2,7 +2,9 @@
 
 # 📚 CKAD
 
-Il percorso CKAD è diviso in argomenti principali. Ogni argomento ha una pagina dedicata con teoria ed esercizi.
+Ogni argomento ha una pagina dedicata con teoria ed esercizi.
+
+0. [Kubernates - Kind](./readme.md)
 
 ## 🔗 Argomenti CKAD
 

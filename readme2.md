@@ -1,1 +1,20 @@
 
+
+# 📚 CKAD
+
+Il percorso CKAD è diviso in argomenti principali. Ogni argomento ha una pagina dedicata con teoria ed esercizi.
+
+## 🔗 Argomenti CKAD
+
+1. [Core Concepts](./ckad_core_concepts.md)
+2. [Configuration](./ckad_configuration.md)
+3. [Multi-Container Pods](./ckad_multicontainer_pods.md)
+4. [Services & Networking](./ckad_services_networking.md)
+5. [Storage](./ckad_storage.md)
+6. [Observability](./ckad_observability.md)
+7. [Pod Design](./ckad_pod_design.md)
+8. [Security](./ckad_security.md)
+9. [Cheatsheet / Keymap](./ckad_cheatsheet.md)
+
+---
+

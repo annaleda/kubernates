@@ -1,5 +1,5 @@
 
-# 📘 PARTE 1 — Kubernetes in locale con Kind (Windows)
+# 📘 Kubernetes in locale con Kind (Windows)
 
 ## 1️⃣ Prerequisiti
 

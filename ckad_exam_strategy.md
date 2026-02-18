@@ -40,6 +40,7 @@ alias ks='kubectl get svc -o wide'
 alias kc='kubectl config get-contexts'
 alias kdry='--dry-run=client -o yaml'
 alias kapply='kubectl apply -f'
+alias kctx='kubectl config use-context'
 ```
 ### Windows:
 
@@ -77,7 +78,7 @@ notepad $PROFILE
 
 | Risorsa            | Comando rapido                                                                 | Uso / Note                                | Alias / Shortcut                        | Alias Dry-Run / YAML           |
 |-------------------|-------------------------------------------------------------------------------|------------------------------------------|----------------------------------------|-------------------------------|
-| **Cluster/Context**| `kubectl config get-contexts` <br> `kubectl config current-context` <br> `kubectl config use-context <ctx>` | Verificare e cambiare contesto           | `kc`                                   | -                             |
+| **Cluster/Context**| `kubectl config get-contexts` <br> `kubectl config current-context` <br> `kubectl config use-context <ctx>` | Verificare e cambiare contesto / cluster | `kc` <br> `kctx <ctx>`                 | -                             |
 | **Namespace**      | `kubectl get ns` <br> `kubectl config set-context --current --namespace=<ns>` <br> `kubectl get pods -n <ns>` | Impostare namespace corrente o usare `-n`| `ns` (short predefinito)              | -                             |
 | **Pod**            | `kubectl run nginx --image=nginx` <br> `kubectl describe pod <pod>` <br> `kubectl logs <pod>` <br> `kubectl exec -it <pod> -- sh` | Creazione e debug rapido                 | `kp` <br> `po`                        | `kdry "create pod nginx --image=nginx"` |
 | **Deployment**     | `kubectl create deployment web --image=nginx --replicas=3` <br> `kubectl edit deployment web` <br> `kubectl scale deployment web --replicas=5` <br> `kubectl set image deployment/web nginx=nginx:1.25` <br> `kubectl rollout status deployment/web` <br> `kubectl rollout undo deployment/web` | Gestione cicli di vita deployment        | `kd` <br> `deploy`                     | `kdry "create deployment web --image=nginx"` |

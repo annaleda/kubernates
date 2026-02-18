@@ -40,6 +40,8 @@ alias kp='kubectl get pods -o wide'
 alias kd='kubectl get deployment -o wide'
 alias ks='kubectl get svc -o wide'
 alias kc='kubectl config get-contexts'
+alias kdry='--dry-run=client -o yaml'
+alias kapply='kubectl apply -f'
 ```
 ### Windows:
 
@@ -59,6 +61,8 @@ Function kp { kubectl get pods -o wide }
 Function kd { kubectl get deployment -o wide }
 Function ks { kubectl get svc -o wide }
 Function kc { kubectl config get-contexts }
+Function kdry { param($cmd) kubectl $cmd --dry-run=client -o yaml }
+Function kapply { param($file) kubectl apply -f $file }
 notepad $PROFILE
 . $PROFILE
 ```

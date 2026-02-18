@@ -27,7 +27,7 @@ Ogni argomento ha una pagina dedicata con teoria ed esercizi.
    - (Probe,Liveness Probe,Readiness Probe, Startup Probe, Logging)
      
 1.7 [Pod Design](./ckad_pod_design.md)
-   - (Service,Type of Service,Port,Ingress)
+   - (Workload,Job,Rollback,Scaling)
      
 1.8 [Security](./ckad_security.md)
    - (Service,Type of Service,Port,Ingress)

@@ -96,7 +96,6 @@ notepad $PROFILE
 
 ---
 
-## ✅ Regola d’oro CKAD
 
 > Se puoi farlo in un comando, fallo in un comando.  
 > Se serve YAML, genera con `--dry-run=client -o yaml` e applica.

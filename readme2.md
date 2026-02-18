@@ -30,7 +30,7 @@ Ogni argomento ha una pagina dedicata con teoria ed esercizi.
    - (Workload,Job,Rollback,Scaling)
      
 1.8 [Security](./ckad_security.md)
-   - (Service,Type of Service,Port,Ingress)
+   - (Pod Securiity,ServiceAccount,RBAC,SecurityContext,Network Policies)
      
 ---
 

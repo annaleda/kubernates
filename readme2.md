@@ -25,6 +25,6 @@ Ogni argomento ha una pagina dedicata con teoria ed esercizi.
 
 ---
 
-### [Esercizi con soluzione shortcut]()
+### [Esercizi con soluzione shortcut](./ckad_sol_esercizi_sc.md)
 
 ---

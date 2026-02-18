@@ -75,23 +75,24 @@ notepad $PROFILE
 
 ---
 
-# 📘 CKAD – Cheatsheet Rapido (Tabellare)
+# 📘 CKAD – Cheatsheet Rapido 
 
-| Risorsa            | Comando rapido                                                                 | Uso / Note                                |
-|-------------------|-------------------------------------------------------------------------------|------------------------------------------|
-| **Cluster/Context**| `kubectl config get-contexts` <br> `kubectl config current-context` <br> `kubectl config use-context <ctx>` | Verificare e cambiare contesto           |
-| **Namespace**      | `kubectl get ns` <br> `kubectl config set-context --current --namespace=<ns>` <br> `kubectl get pods -n <ns>` | Impostare namespace corrente o usare `-n`|
-| **Pod**            | `kubectl run nginx --image=nginx` <br> `kubectl describe pod <pod>` <br> `kubectl logs <pod>` <br> `kubectl exec -it <pod> -- sh` | Creazione e debug rapido                 |
-| **Deployment**     | `kubectl create deployment web --image=nginx --replicas=3` <br> `kubectl edit deployment web` <br> `kubectl scale deployment web --replicas=5` <br> `kubectl set image deployment/web nginx=nginx:1.25` <br> `kubectl rollout status deployment/web` <br> `kubectl rollout undo deployment/web` | Gestione cicli di vita deployment        |
-| **Service**        | `kubectl expose deployment web --port=80 --type=ClusterIP` <br> `kubectl expose deployment web --port=80 --type=NodePort` <br> `kubectl create service clusterip my-cs --tcp=5678:8080 --dry-run=client -o yaml` | Esposizione e test servizi               |
-| **ConfigMap**      | `kubectl create configmap my-config --from-literal=key=value` <br> `kubectl create configmap my-config --from-env-file=file.env` | Configurazioni chiave/valore             |
-| **Secret**         | `kubectl create secret generic my-secret --from-literal=key=value` <br> `kubectl create secret generic my-secret --from-env-file=file.env` | Gestione segreti                          |
-| **Job / CronJob**  | `kubectl create job my-job --image=busybox -- date` <br> `kubectl create cronjob my-job --image=busybox --schedule="*/1 * * * *"` | Job singolo o pianificato                 |
-| **ServiceAccount** | `kubectl create sa my-app-sa`                                                 | Account per risorse                       |
-| **Role / ClusterRole** | `kubectl create role pod-reader --verb=get,list,watch --resource=pods` <br> `kubectl create clusterrole pod-reader --verb=get,list,watch --resource=pods` | Gestione permessi                         |
-| **RoleBinding / ClusterRoleBinding** | `kubectl create rolebinding admin-binding --clusterrole=admin --user=user1 --user=user2 --group=group1` <br> `kubectl create clusterrolebinding cluster-admin-binding --clusterrole=cluster-admin --user=user1` | Associa permessi utenti/gruppi           |
-| **Debug / Info**   | `kubectl get all` <br> `kubectl describe <resource>` <br> `kubectl logs <pod>` <br> `kubectl exec -it <pod> -- sh` <br> `kubectl top pod` <br> `kubectl top node` <br> `kubectl explain <resource>` | Stato cluster, risorse, metriche         |
-| **Dry-Run / YAML** | `kubectl create <resource> ... --dry-run=client -o yaml > file.yaml` <br> `kubectl apply -f file.yaml` | Genera e applica YAML rapidamente        |
+| Risorsa            | Comando rapido                                                                 | Uso / Note                                | Alias / Shortcut                        | Alias Dry-Run / YAML           |
+|-------------------|-------------------------------------------------------------------------------|------------------------------------------|----------------------------------------|-------------------------------|
+| **Cluster/Context**| `kubectl config get-contexts` <br> `kubectl config current-context` <br> `kubectl config use-context <ctx>` | Verificare e cambiare contesto           | `kc`                                   | -                             |
+| **Namespace**      | `kubectl get ns` <br> `kubectl config set-context --current --namespace=<ns>` <br> `kubectl get pods -n <ns>` | Impostare namespace corrente o usare `-n`| `ns` (short predefinito)              | -                             |
+| **Pod**            | `kubectl run nginx --image=nginx` <br> `kubectl describe pod <pod>` <br> `kubectl logs <pod>` <br> `kubectl exec -it <pod> -- sh` | Creazione e debug rapido                 | `kp` <br> `po`                        | `kdry "create pod nginx --image=nginx"` |
+| **Deployment**     | `kubectl create deployment web --image=nginx --replicas=3` <br> `kubectl edit deployment web` <br> `kubectl scale deployment web --replicas=5` <br> `kubectl set image deployment/web nginx=nginx:1.25` <br> `kubectl rollout status deployment/web` <br> `kubectl rollout undo deployment/web` | Gestione cicli di vita deployment        | `kd` <br> `deploy`                     | `kdry "create deployment web --image=nginx"` |
+| **Service**        | `kubectl expose deployment web --port=80 --type=ClusterIP` <br> `kubectl expose deployment web --port=80 --type=NodePort` <br> `kubectl create service clusterip my-cs --tcp=5678:8080 --dry-run=client -o yaml` | Esposizione e test servizi               | `ks` <br> `svc`                        | `kdry "create service clusterip my-cs --tcp=5678:8080"` |
+| **ConfigMap**      | `kubectl create configmap my-config --from-literal=key=value` <br> `kubectl create configmap my-config --from-env-file=file.env` | Configurazioni chiave/valore             | `cm`                                   | `kdry "create configmap my-config --from-literal=key=value"` |
+| **Secret**         | `kubectl create secret generic my-secret --from-literal=key=value` <br> `kubectl create secret generic my-secret --from-env-file=file.env` | Gestione segreti                          | `secret`                               | `kdry "create secret generic my-secret --from-literal=key=value"` |
+| **Job / CronJob**  | `kubectl create job my-job --image=busybox -- date` <br> `kubectl create cronjob my-job --image=busybox --schedule="*/1 * * * *"` | Job singolo o pianificato                 | `job` / `cj`                           | `kdry "create job my-job --image=busybox -- date"` |
+| **ServiceAccount** | `kubectl create sa my-app-sa`                                                 | Account per risorse                       | `sa`                                   | `kdry "create sa my-app-sa"` |
+| **Role / ClusterRole** | `kubectl create role pod-reader --verb=get,list,watch --resource=pods` <br> `kubectl create clusterrole pod-reader --verb=get,list,watch --resource=pods` | Gestione permessi                         | `role` / `cr`                          | `kdry "create role pod-reader --verb=get,list,watch --resource=pods"` |
+| **RoleBinding / ClusterRoleBinding** | `kubectl create rolebinding admin-binding --clusterrole=admin --user=user1 --user=user2 --group=group1` <br> `kubectl create clusterrolebinding cluster-admin-binding --clusterrole=cluster-admin --user=user1` | Associa permessi utenti/gruppi           | `rb` / `crb`                           | `kdry "create rolebinding admin-binding --clusterrole=admin --user=user1"` |
+| **Debug / Info**   | `kubectl get all` <br> `kubectl describe <resource>` <br> `kubectl logs <pod>` <br> `kubectl exec -it <pod> -- sh` <br> `kubectl top pod` <br> `kubectl top node` <br> `kubectl explain <resource>` | Stato cluster, risorse, metriche         | `k`                                    | -                             |
+| **Dry-Run / YAML** | `kubectl create <resource> ... --dry-run=client -o yaml > file.yaml` <br> `kubectl apply -f file.yaml` | Genera e applica YAML rapidamente        | `k`                                    | `kdry "<comando>"` <br> `kapply <file>` |
+
 
 ---
 

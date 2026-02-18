@@ -21,7 +21,7 @@ Ogni argomento ha una pagina dedicata con teoria ed esercizi.
    - (Service,Type of Service,Port,Ingress)
      
 1.5 [Storage](./ckad_storage.md)
-   - (Service,Type of Service,Port,Ingress)
+   - (Volumes,Type of volumes,StorageClass)
      
 1.6 [Observability](./ckad_observability.md)
    - (Service,Type of Service,Port,Ingress)

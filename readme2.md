@@ -24,3 +24,7 @@ Ogni argomento ha una pagina dedicata con teoria ed esercizi.
 ### [CKAD – Esame + Cheatsheet](./ckad_exam_strategy.md)
 
 ---
+
+### [Esercizi con soluzione shortcut]()
+
+---

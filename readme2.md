@@ -28,3 +28,8 @@ Ogni argomento ha una pagina dedicata con teoria ed esercizi.
 ### [Esercizi con soluzione shortcut](./ckad_sol_esercizi_sc.md)
 
 ---
+
+### [Esercizi Linux Foundation + Soluzione](./ckad_lf_sol_esercizi_sc.md)
+
+---
+

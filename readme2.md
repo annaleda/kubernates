@@ -6,18 +6,37 @@ Ogni argomento ha una pagina dedicata con teoria ed esercizi.
 
 0. [Kubernates - Kind](./readme.md)
 
-## 🔗 Argomenti CKAD
+## 🔗 1 Argomenti CKAD
 
-1. [Core Concepts](./ckad_core_concepts.md)
-2. [Configuration](./ckad_configuration.md)
-3. [Multi-Container Pods](./ckad_multicontainer_pods.md)
-4. [Services & Networking](./ckad_services_networking.md)
-5. [Storage](./ckad_storage.md)
-6. [Observability](./ckad_observability.md)
-7. [Pod Design](./ckad_pod_design.md)
-8. [Security](./ckad_security.md)
-9. [Cheatsheet / Keymap](./ckad_cheatsheet.md)
-10. [Soluzione Esercizi](./ckad_sol_esercizi.md)
+1.1 [Core Concepts](./ckad_core_concepts.md)
+   - (Pod,ReplicaSet,Deployment,Namespace,Labels e Selectors)
+     
+1.2 [Configuration](./ckad_configuration.md)
+   - (ConfigMap,Secret,Environment Variables,Resource Requests e Limits,Image Configuration)
+     
+1.3 [Multi-Container Pods](./ckad_multicontainer_pods.md)
+   - (Init Container,Sidecar Container,emptyDir)
+     
+1.4 [Services & Networking](./ckad_services_networking.md)
+   - (Service,Type of Service,Port,Ingress)
+     
+1.5 [Storage](./ckad_storage.md)
+   - (Service,Type of Service,Port,Ingress)
+     
+1.6 [Observability](./ckad_observability.md)
+   - (Service,Type of Service,Port,Ingress)
+     
+1.7 [Pod Design](./ckad_pod_design.md)
+   - (Service,Type of Service,Port,Ingress)
+     
+1.8 [Security](./ckad_security.md)
+   - (Service,Type of Service,Port,Ingress)
+     
+---
+
+2.1 [Cheatsheet / Keymap](./ckad_cheatsheet.md)
+
+2.2 [Soluzione Esercizi](./ckad_sol_esercizi.md)
 
 ---
 

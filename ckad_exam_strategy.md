@@ -1,10 +1,8 @@
-# 📘 CKAD – Strategia Esame + Cheatsheet
+# 📘 CKAD – Esame + Cheatsheet con shortcut
 
 ---
 
-## 1️⃣ Informazioni sull’esame
-
-La certificazione **CKAD (Certified Kubernetes Application Developer)** è rilasciata dalla Cloud Native Computing Foundation (CNCF).
+## 1️⃣ Info esame
 
 Caratteristiche principali:
 

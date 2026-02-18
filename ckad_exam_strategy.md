@@ -22,11 +22,47 @@ L’esame si svolge su cluster Kubernetes reali.
 ## 2️⃣ Setup iniziale consigliato
 
 Appena inizi l’esame:
+### Linux:
 
+```bash
+mkdir ~/my-cka-exam
+cd ~/my-cka-exam
+```
+- Autocompletion
 ```bash
 alias k=kubectl
 source <(kubectl completion bash)
 ```
+- Alias/Funzione per velocità
+```bash
+alias k='kubectl'
+alias kp='kubectl get pods -o wide'
+alias kd='kubectl get deployment -o wide'
+alias ks='kubectl get svc -o wide'
+alias kc='kubectl config get-contexts'
+```
+### Windows:
+
+```bash
+mkdir $HOME\my-cka-exam
+cd $HOME\my-cka-exam
+```
+- Autocompletion
+```bash
+kubectl completion powershell | Out-String | Invoke-Expression
+```
+- Alias/Funzione per velocità
+```bash
+New-Item -ItemType Directory -Path (Split-Path -Parent $PROFILE) -Force
+Set-Alias k kubectl
+Function kp { kubectl get pods -o wide }
+Function kd { kubectl get deployment -o wide }
+Function ks { kubectl get svc -o wide }
+Function kc { kubectl config get-contexts }
+notepad $PROFILE
+. $PROFILE
+```
+
 
 ---
 

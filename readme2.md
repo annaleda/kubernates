@@ -24,7 +24,7 @@ Ogni argomento ha una pagina dedicata con teoria ed esercizi.
    - (Volumes,Type of volumes,StorageClass)
      
 1.6 [Observability](./ckad_observability.md)
-   - (Service,Type of Service,Port,Ingress)
+   - (Probe,Liveness Probe,Readiness Probe, Startup Probe, Logging)
      
 1.7 [Pod Design](./ckad_pod_design.md)
    - (Service,Type of Service,Port,Ingress)

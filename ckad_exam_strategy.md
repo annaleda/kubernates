@@ -30,6 +30,11 @@ source <(kubectl completion bash)
 
 ---
 
+- [GuideLines Before Exam.pdf](https://github.com/user-attachments/files/25387659/GuideLines%2Bto%2BScore%2B100.%2Bin%2BExam%2B.Before%2BExam.pdf)
+- [GuideLines During Exam.pdf](https://github.com/user-attachments/files/25387654/GuideLines%2Bto%2BScore%2B100.%2Bin%2BExam%2B.During%2BExam.pdf)
+
+---
+
 # 📘 CKAD – Cheatsheet Rapido (Tabellare)
 
 | Risorsa            | Comando rapido                                                                 | Uso / Note                                |

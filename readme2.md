@@ -46,5 +46,13 @@ Ogni argomento ha una pagina dedicata con teoria ed esercizi.
 
 ### 2.5 [Esercizi Linux Foundation + Soluzione](./ckad_lf_sol_esercizi_sc.md)
 
+### 2.6 [CKAD Exercises GitHub 1](https://github.com/dgkanatsios/CKAD-exercises/blob/main/README.md)
+
+### 2.7 [CKAD Exercises GitHub 2](https://github.com/ibrahimatay/CKAD-Exercises/blob/master/README.md)
+
+### 2.8 [CKAD Exercises online 1](https://miroberes.github.io)
+
+### 2.9 [CKAD Exercises online 2](https://hitenpratap.github.io/CKAD-Exercises)
+
 ---
 

@@ -28,4 +28,7 @@
 
 [Secret.pdf](https://github.com/user-attachments/files/25422042/Secret.pdf)
 
+[Affinity.pdf](https://github.com/user-attachments/files/25422318/Affinity.pdf)
+
 [blue_green_deployment.yml](https://github.com/user-attachments/files/25422093/blue_green_deployment.yml)
+

@@ -34,7 +34,9 @@ Ogni argomento ha una pagina dedicata con teoria ed esercizi.
      
 ---
 
-### 2.1 [Cheatsheet / Keymap](./ckad_cheatsheet.md)
+### 2.0 [Cheatsheet / Keymap](./ckad_cheatsheet.md)
+
+### 2.1 [Pdf Esercizi Guidati](./ckad_pdf_esercizi_guidati.md)
 
 ### 2.2 [Soluzione Esercizi](./ckad_sol_esercizi.md)
 

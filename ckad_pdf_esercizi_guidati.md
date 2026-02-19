@@ -27,3 +27,5 @@
 [ConfigMap.pdf](https://github.com/user-attachments/files/25422041/ConfigMap.pdf)
 
 [Secret.pdf](https://github.com/user-attachments/files/25422042/Secret.pdf)
+
+[blue_green_deployment.yml](https://github.com/user-attachments/files/25422093/blue_green_deployment.yml)

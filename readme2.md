@@ -56,5 +56,7 @@ Ogni argomento ha una pagina dedicata con teoria ed esercizi.
 
 ### 2.9 [CKAD Exercises online 2](https://hitenpratap.github.io/CKAD-Exercises)
 
+### 2.10 [CKAD 100 Exercises](./session.md)
+
 ---
 

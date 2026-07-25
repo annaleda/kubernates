@@ -671,7 +671,7 @@ Container 1:
 Container 2:
 - `busybox` that modifies a config file every 10 seconds
 
-Use a shared volume `etc/config`.
+Use a shared volume `/etc/config`.
 
 <details>
 <summary>Solution</summary>

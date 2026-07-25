@@ -132,6 +132,7 @@ k apply -f external-proxy.yaml
 - Container 2
   - Image: busybox
   - Trasforma contenuto in uppercase e salva in `/data/processed.txt`
+    > trasforma il contenuto prendendo input dal file: tr 'a-z' 'A-Z' < /data/raw.txt
 
 - Vincoli
   - Volume shared `emptyDir`

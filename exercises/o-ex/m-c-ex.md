@@ -651,7 +651,10 @@ spec:
     - name: workdir
       mountPath: /usr/share/nginx/html
 ```
-
+L'init container va a sovrascrivere la pagina html di nginx per testarlo dal browser vai su localhost:8080 dopo aver eseguito i seguente comando:
+```
+k port-forward pod/pod10 8080:80
+```
 </details>
 
 ---

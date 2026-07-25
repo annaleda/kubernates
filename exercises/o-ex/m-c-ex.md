@@ -617,7 +617,7 @@ spec:
 
 ### Task
 
-Create a Pod that:
+Create a Pod `init-example` that:
 
 1. Uses an **initContainer**
 2. Writes a file `/work/index.html`
@@ -663,7 +663,7 @@ k port-forward pod/pod10 8080:80
 
 ### Task
 
-Create a Pod with:
+Create a Pod `shared-config-pod` with:
 
 Container 1:
 - `nginx`

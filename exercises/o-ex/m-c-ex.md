@@ -582,6 +582,11 @@ Create a Pod **ambassador-pod** with two containers:
 - **redis**
 - **ambassador proxy** (`socat`) forwarding traffic from port `6379`
 
+```
+args:
+    - "tcp-listen:6379,fork,reuseaddr"
+    - "tcp-connect:localhost:6379"
+```
 <details>
 <summary>Solution</summary>
 
@@ -705,7 +710,9 @@ Create a Pod named **error-log-pod** with two containers:
 
 - **app**: writes both `INFO` and `ERROR` messages to `/var/log/app.log`
 - **sidecar**: reads the same file and shows only lines containing `ERROR`
-
+```
+tail -f /var/log/app.log | awk '/ERROR/'
+```
 Use a shared `emptyDir` volume mounted on `/var/log`.
 
 <details>
@@ -843,7 +850,10 @@ Create a Pod named **adapter-pod**:
 
 - **app** container writes JSON lines to `/data/app.log`
 - **adapter** container reads the same file and extracts only the `"level"` field
-
+  
+```
+tail -f /data/app.log | awk -F'"' '{print $4}'
+```
 Example written line:
 
 ```json

@@ -460,7 +460,88 @@ kubectl exec -it subpath-app -- ls /var/log/app
 </details>
 
 ---
+## ST-4.1 — SubPath Mount con Secret
 
+- Pod: `secret-subpath`
+
+- Secret: `app-secret`
+
+- Configurazione
+  - Creare un Secret con due chiavi:
+    - `username`
+    - `password`
+  - Montare **solo** il file `username` in:
+    - `/etc/app/username`
+
+- Validazione
+  - Il file `/etc/app/username` esiste
+  - Il file contiene il valore del Secret
+  - Il file `password` **non** è presente in `/etc/app`
+
+---
+
+<details>
+<summary>Soluzione</summary>
+
+```bash
+kubectl create secret generic app-secret \
+  --from-literal=username=admin \
+  --from-literal=password=SuperSecret
+
+kubectl run secret-subpath --image=busybox \
+  --dry-run=client -o yaml > secret-subpath.yaml
+```
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secret-subpath
+spec:
+  containers:
+  - name: secret-subpath
+    image: busybox
+    command:
+      - sleep
+      - "3600"
+    volumeMounts:
+      - name: secret-volume
+        mountPath: /etc/app/username
+        subPath: username
+
+  volumes:
+    - name: secret-volume
+      secret:
+        secretName: app-secret
+```
+
+Validazione:
+
+```bash
+kubectl exec secret-subpath -- cat /etc/app/username
+```
+
+Output:
+
+```text
+admin
+```
+
+Verificare che non esista il file `password`:
+
+```bash
+kubectl exec secret-subpath -- ls /etc/app
+```
+
+Output:
+
+```text
+username
+```
+
+</details>
+
+---
 ## ST-5 — StorageClass Usage
 
 - PVC: `dynamic-storage`

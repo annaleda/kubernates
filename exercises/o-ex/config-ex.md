@@ -1,4 +1,4 @@
-- [ Home ](../../readme.md)   | [ Teoria ](../../arguments.md)   | [ Info Exam ](../../doc/ckad_exam_strategy.md)    | [ Home Other Exercises ](../o_exercises.md) | [ Resources Schema ](../../doc/res-schema.md)   | [ Workbook secret configmap ](./w-s-c.md)
+- [ Home ](../../readme.md)   | [ Teoria ](../../arguments.md)   | [ Info Exam ](../../doc/ckad_exam_strategy.md)    | [ Home Other Exercises ](../o_exercises.md) | [ Resources Schema ](../../doc/res-schema.md)   | [ Workbook secret configmap ](./w-s-c.md) | [ secret-configmap rules](../../doc/s-c-rules.md)
 --- 
 ###  Configuration (24 esercizi)
 

@@ -57,9 +57,7 @@ winpty kubectl run alpine --rm -it --restart=Never --image=alpine -- sh
 ```sh
 kubectl create deployment nginx --image=nginx
 
-kubectl expose deployment nginx \
-  --port=80 \
-  --target-port=80
+kubectl expose deployment nginx --port=80 --target-port=80
 ```
 
 Attendi che il Pod sia `Running`:
@@ -91,9 +89,7 @@ kubectl run dns-test --rm -it --restart=Never --image=busybox:1.36 -- nslookup n
 ```sh
 kubectl create deployment nginx --image=nginx
 
-kubectl expose deployment nginx \
-  --port=80 \
-  --target-port=80
+kubectl expose deployment nginx --port=80 --target-port=80
 ```
 
 Attendi che il Pod sia `Running`:
@@ -118,8 +114,7 @@ Verifica che il Service `nginx` sia raggiungibile utilizzando il suo Fully Quali
 <summary>Soluzione</summary>
 
 ```sh
-kubectl run dns-test --rm -it --restart=Never --image=busybox:1.36 -- \
-nslookup nginx.default.svc.cluster.local
+kubectl run dns-test --rm -it --restart=Never --image=busybox:1.36 -- nslookup nginx.default.svc.cluster.local
 ```
 
 </details>
@@ -133,9 +128,7 @@ nslookup nginx.default.svc.cluster.local
 ```sh
 kubectl create deployment nginx --image=nginx
 
-kubectl expose deployment nginx \
-  --port=80 \
-  --target-port=80
+kubectl expose deployment nginx  --port=80 --target-port=80
 ```
 
 Attendi che il Pod sia `Running`:
@@ -156,8 +149,7 @@ Verifica che il Service `nginx` risponda a una richiesta HTTP utilizzando il suo
 <summary>Soluzione</summary>
 
 ```sh
-kubectl run wget --rm -it --restart=Never --image=busybox:1.36 -- \
-wget -qO- http://nginx
+kubectl run wget --rm -it --restart=Never --image=busybox:1.36 -- wget -qO- http://nginx
 ```
 
 </details>
@@ -171,9 +163,7 @@ wget -qO- http://nginx
 ```sh
 kubectl create deployment nginx --image=nginx
 
-kubectl expose deployment nginx \
-  --port=80 \
-  --target-port=80
+kubectl expose deployment nginx --port=80 --target-port=80
 ```
 
 Attendi che il Pod sia `Running`:
@@ -200,8 +190,7 @@ Utilizza il ClusterIP del Service `nginx` per verificare che risponda a una rich
 <summary>Soluzione</summary>
 
 ```sh
-kubectl run wget --rm -it --restart=Never --image=busybox:1.36 -- \
-wget -qO- http://10.96.0.10
+kubectl run wget --rm -it --restart=Never --image=busybox:1.36 -- wget -qO- http://10.96.0.10
 ```
 
 </details>
@@ -215,10 +204,7 @@ wget -qO- http://10.96.0.10
 ```sh
 kubectl create deployment nginx --image=nginx
 
-kubectl expose deployment nginx \
-  --port=80 \
-  --target-port=80 \
-  --type=NodePort
+kubectl expose deployment nginx --port=80 --target-port=80 --type=NodePort
 ```
 
 Visualizza la porta assegnata:
@@ -239,8 +225,10 @@ Verifica che il Service sia raggiungibile utilizzando il Node IP e la NodePort.
 <summary>Soluzione</summary>
 
 ```sh
-kubectl run wget --rm -it --restart=Never --image=busybox:1.36 -- \
-wget -qO- http://NODE_IP:NODEPORT
+kubectl run wget --rm -it --restart=Never --image=busybox:1.36 -- wget -qO- http://NODE_IP:NODEPORT
+```
+```sh
+winpty kubectl run wget --rm -it --restart=Never --image=busybox:1.36 -- wget -qO- http://NODE_IP:NODEPORT
 ```
 
 </details>
@@ -259,10 +247,11 @@ Verifica che un Pod possa stabilire una connessione HTTPS verso un sito esterno.
 <summary>Soluzione</summary>
 
 ```sh
-kubectl run wget --rm -it --restart=Never --image=busybox:1.36 -- \
-wget https://kubernetes.io
+kubectl run wget --rm -it --restart=Never --image=busybox:1.36 -- wget https://kubernetes.io
 ```
-
+```sh
+winpty kubectl run wget --rm -it --restart=Never --image=busybox:1.36 -- wget https://kubernetes.io
+```
 </details>
 
 ---
@@ -279,8 +268,7 @@ Verifica che un Pod riesca a risolvere un nome DNS esterno.
 <summary>Soluzione</summary>
 
 ```sh
-kubectl run dns --rm -it --restart=Never --image=busybox:1.36 -- \
-nslookup google.com
+kubectl run dns --rm -it --restart=Never --image=busybox:1.36 -- nslookup google.com
 ```
 
 </details>
@@ -312,8 +300,10 @@ Verifica che il Pod sia raggiungibile tramite il suo indirizzo IP.
 <summary>Soluzione</summary>
 
 ```sh
-kubectl run test --rm -it --restart=Never --image=busybox:1.36 -- \
-ping POD_IP
+kubectl run test --rm -it --restart=Never --image=busybox:1.36 -- ping POD_IP
+```
+```sh
+winpty kubectl run test --rm -it --restart=Never --image=busybox:1.36 -- ping POD_IP
 ```
 
 </details>
@@ -333,7 +323,9 @@ Avvia un Pod temporaneo utilizzando l'immagine `nicolaka/netshoot` ed entra nell
 ```sh
 kubectl run debug --rm -it --restart=Never --image=nicolaka/netshoot -- bash
 ```
-
+```sh
+winpty kubectl run debug --rm -it --restart=Never --image=nicolaka/netshoot -- bash
+```
 </details>
 
 ---
@@ -345,9 +337,7 @@ kubectl run debug --rm -it --restart=Never --image=nicolaka/netshoot -- bash
 ```sh
 kubectl create deployment nginx --image=nginx
 
-kubectl expose deployment nginx \
-  --port=80 \
-  --target-port=80
+kubectl expose deployment nginx --port=80  --target-port=80
 ```
 
 Attendi che il Pod sia `Running`.
@@ -364,10 +354,11 @@ Verifica che il Service `nginx` risponda a una richiesta HTTP utilizzando `curl`
 <summary>Soluzione</summary>
 
 ```sh
-kubectl run curl --rm -it --restart=Never --image=curlimages/curl -- \
-curl http://nginx
+kubectl run curl --rm -it --restart=Never --image=curlimages/curl -- curl http://nginx
 ```
-
+```sh
+winpty kubectl run curl --rm -it --restart=Never --image=curlimages/curl -- curl http://nginx
+```
 </details>
 
 ---
@@ -380,18 +371,13 @@ curl http://nginx
 ```sh
 kubectl create deployment nginx --image=nginx
 
-kubectl expose deployment nginx \
-  --port=80 \
-  --target-port=80
+kubectl expose deployment nginx --port=80 --target-port=80
 ```
 
 Attendi che il Pod sia pronto:
 
 ```sh
-kubectl wait \
-  --for=condition=Available \
-  deployment/nginx \
-  --timeout=90s
+kubectl wait --for=condition=Available deployment/nginx  --timeout=90s
 ```
 
 ---
@@ -406,11 +392,10 @@ Utilizza un Pod temporaneo per recuperare e visualizzare la pagina index esposta
 <summary>Soluzione</summary>
 
 ```sh
-kubectl run wget-test \
-  --rm -it \
-  --restart=Never \
-  --image=busybox:1.36 -- \
-  wget -qO- http://nginx
+kubectl run wget-test --rm -it --restart=Never  --image=busybox:1.36 -- wget -qO- http://nginx
+```
+```sh
+winpty kubectl run wget-test --rm -it --restart=Never  --image=busybox:1.36 -- wget -qO- http://nginx
 ```
 
 </details>
@@ -424,19 +409,15 @@ kubectl run wget-test \
 Crea un Pod BusyBox che rimanga in esecuzione:
 
 ```sh
-kubectl run dns-client \
-  --image=busybox:1.36 \
-  --restart=Never \
-  -- sleep 3600
+kubectl run dns-client  --image=busybox:1.36  --restart=Never  -- sleep 3600
 ```
-
+```sh
+winpty kubectl run dns-client  --image=busybox:1.36  --restart=Never  -- sleep 3600
+```
 Attendi che il Pod sia pronto:
 
 ```sh
-kubectl wait \
-  --for=condition=Ready \
-  pod/dns-client \
-  --timeout=60s
+kubectl wait --for=condition=Ready pod/dns-client --timeout=60s
 ```
 
 Il Service `kubernetes` esiste normalmente nella namespace `default`.
@@ -459,8 +440,7 @@ kubectl exec dns-client -- nslookup kubernetes.default
 È possibile utilizzare anche il FQDN completo:
 
 ```sh
-kubectl exec dns-client -- \
-  nslookup kubernetes.default.svc.cluster.local
+kubectl exec dns-client -- nslookup kubernetes.default.svc.cluster.local
 ```
 
 </details>
@@ -474,19 +454,16 @@ kubectl exec dns-client -- \
 Se non esiste già, crea un Pod BusyBox che rimanga in esecuzione:
 
 ```sh
-kubectl run dns-client \
-  --image=busybox:1.36 \
-  --restart=Never \
-  -- sleep 3600
+kubectl run dns-client  --image=busybox:1.36  --restart=Never  -- sleep 3600
+```
+```sh
+winpty kubectl run dns-client  --image=busybox:1.36  --restart=Never  -- sleep 3600
 ```
 
 Attendi che il Pod sia pronto:
 
 ```sh
-kubectl wait \
-  --for=condition=Ready \
-  pod/dns-client \
-  --timeout=60s
+kubectl wait --for=condition=Ready  pod/dns-client  --timeout=60s
 ```
 
 ---
@@ -540,12 +517,11 @@ Crea un Pod chiamato `debug`:
 <summary>Soluzione</summary>
 
 ```sh
-kubectl run debug \
-  --image=busybox:1.36 \
-  --restart=Never -- \
-  sleep 3600
+kubectl run debug --image=busybox:1.36 --restart=Never --  sleep 3600
 ```
-
+```sh
+winpty kubectl run debug --image=busybox:1.36 --restart=Never --  sleep 3600
+```
 Verifica che sia in esecuzione:
 
 ```sh
@@ -563,12 +539,11 @@ kubectl get pod debug
 Crea il Pod, se non esiste già:
 
 ```sh
-kubectl run debug \
-  --image=busybox:1.36 \
-  --restart=Never -- \
-  sleep 3600
+kubectl run debug --image=busybox:1.36 --restart=Never -- sleep 3600
 ```
-
+```sh
+winpty kubectl run debug --image=busybox:1.36 --restart=Never -- sleep 3600
+```
 ---
 
 ### Task
@@ -595,18 +570,13 @@ kubectl delete pod debug
 ```sh
 kubectl create deployment nginx --image=nginx
 
-kubectl expose deployment nginx \
-  --port=80 \
-  --target-port=80
+kubectl expose deployment nginx --port=80 --target-port=80
 ```
 
 Attendi che il Deployment sia disponibile:
 
 ```sh
-kubectl wait \
-  --for=condition=Available \
-  deployment/nginx \
-  --timeout=90s
+kubectl wait --for=condition=Available deployment/nginx --timeout=90s
 ```
 
 ---
@@ -635,8 +605,7 @@ kubectl describe endpoints nginx
 È possibile controllare anche gli EndpointSlice:
 
 ```sh
-kubectl get endpointslices \
-  -l kubernetes.io/service-name=nginx
+kubectl get endpointslices -l kubernetes.io/service-name=nginx
 ```
 
 </details>
@@ -650,18 +619,13 @@ kubectl get endpointslices \
 ```sh
 kubectl create deployment nginx --image=nginx
 
-kubectl expose deployment nginx \
-  --port=80 \
-  --target-port=80
+kubectl expose deployment nginx --port=80 --target-port=80
 ```
 
 Attendi che il Deployment sia disponibile:
 
 ```sh
-kubectl wait \
-  --for=condition=Available \
-  deployment/nginx \
-  --timeout=90s
+kubectl wait --for=condition=Available deployment/nginx --timeout=90s
 ```
 
 ---
@@ -678,13 +642,11 @@ Non è necessario scaricare la pagina HTTP.
 <summary>Soluzione</summary>
 
 ```sh
-kubectl run netshoot \
-  --rm -it \
-  --restart=Never \
-  --image=nicolaka/netshoot -- \
-  nc -zv nginx 80
+kubectl run netshoot --rm -it --restart=Never --image=nicolaka/netshoot -- nc -zv nginx 80
 ```
-
+```sh
+winpty kubectl run netshoot --rm -it --restart=Never --image=nicolaka/netshoot -- nc -zv nginx 80
+```
 Un risultato positivo dovrebbe indicare che la connessione alla porta `80` è riuscita.
 
 </details>
@@ -705,13 +667,12 @@ Sovrascrivi il comando predefinito dell'immagine e avvia una shell interattiva. 
 <summary>Soluzione</summary>
 
 ```sh
-kubectl run toolbox \
-  --rm -it \
-  --restart=Never \
-  --image=busybox:1.36 -- \
-  sh
+kubectl run toolbox --rm -it --restart=Never --image=busybox:1.36 -- sh
 ```
-
+usa winpty se su git bash
+```sh
+winpty kubectl run toolbox --rm -it --restart=Never --image=busybox:1.36 -- sh
+```
 Il doppio trattino:
 
 ```text

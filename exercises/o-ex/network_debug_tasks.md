@@ -21,7 +21,10 @@ SECTION: APPLICATION OBSERVABILITY AND MAINTENANCE
 ```sh
 kubectl run tmp --rm -it --restart=Never --image=busybox:1.36 -- sh
 ```
-
+usa winpty se su git bash
+```sh
+winpty kubectl run po-temp --rm -it --restart=Never --image=busybox -- sh
+```
 </details>
 
 ---
@@ -39,12 +42,32 @@ kubectl run tmp --rm -it --restart=Never --image=busybox:1.36 -- sh
 ```sh
 kubectl run alpine --rm -it --restart=Never --image=alpine -- sh
 ```
-
+usa winpty se su git bash
+```sh
+winpty kubectl run alpine --rm -it --restart=Never --image=alpine -- sh
+```
 </details>
 
 ---
 
 ## NET-3 — Verificare DNS con nslookup
+
+### Environment preparation
+
+```sh
+kubectl create deployment nginx --image=nginx
+
+kubectl expose deployment nginx \
+  --port=80 \
+  --target-port=80
+```
+
+Attendi che il Pod sia `Running`:
+
+```sh
+kubectl get pods
+```
+Verifica che il Service `nginx` sia risolvibile tramite il DNS del cluster utilizzando un Pod temporaneo BusyBox.
 
 - Service: nginx
 
@@ -63,6 +86,29 @@ kubectl run dns-test --rm -it --restart=Never --image=busybox:1.36 -- nslookup n
 
 ## NET-4 — nslookup FQDN
 
+### Environment preparation
+
+```sh
+kubectl create deployment nginx --image=nginx
+
+kubectl expose deployment nginx \
+  --port=80 \
+  --target-port=80
+```
+
+Attendi che il Pod sia `Running`:
+
+```sh
+kubectl get pods
+```
+
+---
+
+### Task
+
+Verifica che il Service `nginx` sia raggiungibile utilizzando il suo Fully Qualified Domain Name (FQDN).
+
+---
 - Namespace: default
 - Service: nginx
 
@@ -82,6 +128,28 @@ nslookup nginx.default.svc.cluster.local
 
 ## NET-5 — wget verso Service
 
+### Environment preparation
+
+```sh
+kubectl create deployment nginx --image=nginx
+
+kubectl expose deployment nginx \
+  --port=80 \
+  --target-port=80
+```
+
+Attendi che il Pod sia `Running`:
+
+```sh
+kubectl get pods
+```
+
+---
+
+### Task
+
+Verifica che il Service `nginx` risponda a una richiesta HTTP utilizzando il suo nome DNS.
+
 ---
 
 <details>
@@ -97,6 +165,34 @@ wget -qO- http://nginx
 ---
 
 ## NET-6 — wget verso ClusterIP
+
+### Environment preparation
+
+```sh
+kubectl create deployment nginx --image=nginx
+
+kubectl expose deployment nginx \
+  --port=80 \
+  --target-port=80
+```
+
+Attendi che il Pod sia `Running`:
+
+```sh
+kubectl get pods
+```
+
+Recupera il ClusterIP del Service:
+
+```sh
+kubectl get svc nginx
+```
+
+---
+
+### Task
+
+Utilizza il ClusterIP del Service `nginx` per verificare che risponda a una richiesta HTTP.
 
 ---
 
@@ -114,6 +210,29 @@ wget -qO- http://10.96.0.10
 
 ## NET-7 — wget su NodePort
 
+### Environment preparation
+
+```sh
+kubectl create deployment nginx --image=nginx
+
+kubectl expose deployment nginx \
+  --port=80 \
+  --target-port=80 \
+  --type=NodePort
+```
+
+Visualizza la porta assegnata:
+
+```sh
+kubectl get svc nginx
+```
+
+---
+
+### Task
+
+Verifica che il Service sia raggiungibile utilizzando il Node IP e la NodePort.
+
 ---
 
 <details>
@@ -129,6 +248,10 @@ wget -qO- http://NODE_IP:NODEPORT
 ---
 
 ## NET-8 — Test connessione HTTPS
+
+### Task
+
+Verifica che un Pod possa stabilire una connessione HTTPS verso un sito esterno.
 
 ---
 
@@ -146,6 +269,10 @@ wget https://kubernetes.io
 
 ## NET-9 — Test DNS esterno
 
+### Task
+
+Verifica che un Pod riesca a risolvere un nome DNS esterno.
+
 ---
 
 <details>
@@ -162,7 +289,24 @@ nslookup google.com
 
 ## NET-10 — Ping Pod
 
+### Environment preparation
+
+```sh
+kubectl create deployment nginx --image=nginx
+
+kubectl get pods -o wide
+```
+
+Annota l'indirizzo IP del Pod.
+
 ---
+
+### Task
+
+Verifica che il Pod sia raggiungibile tramite il suo indirizzo IP.
+
+---
+
 
 <details>
 <summary>Soluzione</summary>

@@ -54,3 +54,12 @@ winpty kubectl exec -it debug -- sh
 | `nc -zv`           | Verifica la raggiungibilità di una porta TCP                                    |           Pattern TCP          |
 | `sleep 3600`       | Mantiene il Pod in esecuzione per il debug                                      |         Pod persistente        |
 
+| Voglio...                                     | Opzioni                                 |
+| --------------------------------------------- | --------------------------------------- |
+| Aprire una shell (`sh`, `bash`)               | `-it`                                   |
+| Eseguire un comando e vedere l'output         | `-i`                                    |
+| Salvare l'output in un file                   | `-i` + `> file`                         |
+| Usare Git Bash con una shell                  | `winpty` + `-it`                        |
+| Usare Git Bash per un comando non interattivo | **Niente `winpty`**, solo `-i` se serve |
+
+

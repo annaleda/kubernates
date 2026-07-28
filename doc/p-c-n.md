@@ -1,3 +1,4 @@
+```sh
 # 1. Shell BusyBox (Linux / CKAD)
 kubectl run temp --rm -it --restart=Never --image=busybox -- sh
 
@@ -9,7 +10,7 @@ kubectl run temp -i --rm --restart=Never --image=busybox -- nslookup nginx
 
 # 4. Test HTTP
 kubectl run temp -i --rm --restart=Never --image=busybox -- wget -qO- http://nginx
-```sh
+
 # 5. HTTP e salva in un file locale
 kubectl run temp -i --rm --restart=Never --image=busybox -- wget -qO- http://nginx > nginx.txt
 

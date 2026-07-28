@@ -36,10 +36,9 @@ EOF
 
 ## Task
 
-The Pod continuously enters `CrashLoopBackOff`.
+The container is repeatedly restarted because the existing Liveness Probe fails before the application has finished starting.
 
-Without removing the existing Liveness Probe, modify the Pod so that it
-starts successfully.
+Without removing the existing Liveness Probe, modify the Pod so that the application can complete its startup and the restart count stops increasing.
 
 
 <details>

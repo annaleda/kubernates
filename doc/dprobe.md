@@ -1,4 +1,4 @@
-# CKAD Probe Troubleshooting Exercises
+### CKAD Probe Troubleshooting Exercises
 
 These exercises simulate CKAD troubleshooting tasks. The environment is
 already prepared: your goal is to identify the problem and apply the
@@ -6,7 +6,7 @@ minimum required change.
 
 ------------------------------------------------------------------------
 
-# Exercise 1 - Add a Startup Probe
+## Exercise 1 - Add a Startup Probe
 
 ## Environment preparation
 
@@ -41,16 +41,16 @@ The Pod continuously enters `CrashLoopBackOff`.
 Without removing the existing Liveness Probe, modify the Pod so that it
 starts successfully.
 
-```{=html}
+
 <details>
-```
-```{=html}
+
+
 <summary>
-```
+
 Solution
-```{=html}
+
 </summary>
-```
+
 ``` yaml
 startupProbe:
   httpGet:
@@ -60,13 +60,13 @@ startupProbe:
   failureThreshold: 10
 ```
 
-```{=html}
+
 </details>
-```
+
 
 ------------------------------------------------------------------------
 
-# Exercise 2 - Fix the Wrong Probe
+## Exercise 2 - Fix the Wrong Probe
 
 ## Environment preparation
 
@@ -95,16 +95,16 @@ The application is working correctly.
 
 Modify the Pod so the Service can send traffic to it.
 
-```{=html}
+
 <details>
-```
-```{=html}
+
+
 <summary>
-```
+
 Solution
-```{=html}
+
 </summary>
-```
+
 Change:
 
 ``` yaml
@@ -117,13 +117,13 @@ to
 path: /
 ```
 
-```{=html}
+
 </details>
-```
+
 
 ------------------------------------------------------------------------
 
-# Exercise 3 - Service Does Not Route Traffic
+## Exercise 3 - Service Does Not Route Traffic
 
 ## Environment preparation
 
@@ -146,16 +146,15 @@ Users report:
 
 Fix the problem.
 
-```{=html}
+
 <details>
-```
-```{=html}
+
 <summary>
-```
+
 Solution
-```{=html}
+
 </summary>
-```
+
 ``` yaml
 readinessProbe:
   httpGet:
@@ -163,13 +162,13 @@ readinessProbe:
     port: 80
 ```
 
-```{=html}
+
 </details>
-```
+
 
 ------------------------------------------------------------------------
 
-# Exercise 4 - Startup Probe Timeout
+## Exercise 4 - Startup Probe Timeout
 
 ## Environment preparation
 
@@ -199,16 +198,16 @@ The Pod never becomes Ready.
 
 Modify the Startup Probe using the minimum number of changes.
 
-```{=html}
+
 <details>
-```
-```{=html}
+
+
 <summary>
-```
+
 Solution
-```{=html}
+
 </summary>
-```
+
 Increase:
 
 ``` yaml
@@ -217,6 +216,7 @@ failureThreshold: 7
 
 or higher.
 
-```{=html}
+
 </details>
-```
+
+---

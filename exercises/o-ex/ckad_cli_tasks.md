@@ -89,7 +89,7 @@ SECTION: APPLICATION OBSERVABILITY AND MAINTENANCE
 <summary>Soluzione</summary>
 
 ```sh
-kubectl get svc --field-selector spec.type=NodePort > /root/nodeport-svc.txt
+k get svc -o jsonpath='{range .items[?(@.spec.type=="NodePort")]}{.metadata.name}{"\n"}{end}' > /root/nodeport-svc.txt
 ```
 
 </details>

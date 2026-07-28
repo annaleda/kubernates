@@ -36,3 +36,21 @@ kubectl exec -it debug -- sh
 winpty kubectl exec -it debug -- sh
 
 ```
+| Opzione            | Significato                                                                     |        Usata nei pattern       |
+| ------------------ | ------------------------------------------------------------------------------- | :----------------------------: |
+| `--image=IMAGE`    | Specifica l'immagine del container                                              |                ✅               |
+| `--restart=Never`  | Crea un Pod (non un Deployment)                                                 |                ✅               |
+| `--rm`             | Elimina il Pod al termine dell'esecuzione                                       |                ✅               |
+| `-i`               | Collega stdin/stdout al Pod (necessario con `--rm` per comandi non interattivi) |                ✅               |
+| `-t`               | Alloca un terminale (TTY)                                                       |   Solo con shell interattive   |
+| `-it`              | Equivale a `-i -t`                                                              |      Shell (`sh`, `bash`)      |
+| `--`               | Separa le opzioni di `kubectl` dal comando eseguito nel container               |                ✅               |
+| `--dry-run=client` | Genera il manifest senza creare il Pod                                          |                ✅               |
+| `-o yaml`          | Visualizza il manifest in formato YAML                                          |         Con `--dry-run`        |
+| `sh` / `bash`      | Apre una shell nel container                                                    |      Pattern 1, 2 e `exec`     |
+| `sh -c`            | Esegue un comando tramite la shell del container (utile per redirect e pipe)    | Salvataggio file nel container |
+| `wget -qO-`        | Scarica una pagina e la stampa su stdout                                        |          Pattern HTTP          |
+| `nslookup`         | Verifica la risoluzione DNS                                                     |           Pattern DNS          |
+| `nc -zv`           | Verifica la raggiungibilità di una porta TCP                                    |           Pattern TCP          |
+| `sleep 3600`       | Mantiene il Pod in esecuzione per il debug                                      |         Pod persistente        |
+

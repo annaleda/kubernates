@@ -1,4 +1,4 @@
-- [ Home ](../../readme.md)   | [ Teoria ](../../arguments.md)   | [ Info Exam ](../../doc/ckad_exam_strategy.md)    | [ Home Other Exercises ](../o_exercises.md)   
+- [ Home ](../../readme.md)   | [ Teoria ](../../teory.md)   | [ Info Exam ](../../doc/ckad_exam_strategy.md)    | [ Home Other Exercises ](../o_exercises.md)   
 --- 
 ### CronJob — Scheduling, JobTemplate e Pattern CKAD (20 esercizi)
 ---

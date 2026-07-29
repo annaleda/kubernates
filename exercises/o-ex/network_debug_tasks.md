@@ -223,7 +223,13 @@ Verifica che il Service sia raggiungibile utilizzando il Node IP e la NodePort.
 
 <details>
 <summary>Soluzione</summary>
-
+  
+Trova l'ip del nodo 
+  
+```sh
+kubectl get nodes -o wide  
+```
+  
 ```sh
 kubectl run wget --rm -it --restart=Never --image=busybox:1.36 -- wget -qO- http://NODE_IP:NODEPORT
 ```

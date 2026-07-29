@@ -75,4 +75,13 @@ winpty kubectl exec -it debug -- sh
 | Usare Git Bash con una shell                  | `winpty` + `-it`                        |
 | Usare Git Bash per un comando non interattivo | **Niente `winpty`**, solo `-i` se serve |
 
+| Risorsa              |           Ha un FQDN?            | Esempio                                   |
+| -------------------- |  ------------------------------- | ----------------------------------------- |
+| **Service**          |              ✅ Sì               | `nginx.default.svc.cluster.local`         |
+| **Headless Service** |              ✅ Sì              | `db.default.svc.cluster.local`            |
+| **Pod**              |         Solo in casi specifici   | `mypod.default.pod.cluster.local`         |
+| **Deployment**       |              ❌ No              | Nessun nome DNS                           |
+| **ReplicaSet**       |              ❌ No              | Nessun nome DNS                           |
+| **DaemonSet**        |              ❌ No              | Nessun nome DNS                           |
+| **StatefulSet**      | ✅ Sì, tramite Headless Service | `mysql-0.mysql.default.svc.cluster.local` |
 

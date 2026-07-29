@@ -59,6 +59,13 @@ winpty kubectl exec -it debug -- sh
 | `-q`    | Quiet mode (non mostra il progresso del download)                 |
 | `-O-`   | Scrive il contenuto scaricato su **stdout** invece che in un file |
 
+| Opzione | Significato                                                     |
+| ------- | --------------------------------------------------------------- |
+| `nc`    | **Netcat**, strumento per testare connessioni di rete (TCP/UDP) |
+| `-z`    | Verifica solo se la porta è aperta, senza inviare dati          |
+| `-v`    | Mostra informazioni dettagliate (verbose)                       |
+
+
 
 | Voglio...                                     | Opzioni                                 |
 | --------------------------------------------- | --------------------------------------- |

@@ -1,4 +1,4 @@
-- [ Home ](../../readme.md)   | [ Teoria ](../../arguments.md)   | [ Info Exam ](../../doc/ckad_exam_strategy.md)    | [ Home Other Exercises ](../o_exercises.md)   |  [ Bash ](../../doc/bash.md) | [ Volume Shared ](../../doc/v-s.md)
+- [ Home ](../../readme.md)   | [ Teoria ](../../teory.md)   | [ Info Exam ](../../doc/ckad_exam_strategy.md)    | [ Home Other Exercises ](../o_exercises.md)   |  [ Bash ](../../doc/bash.md) | [ Volume Shared ](../../doc/v-s.md)
 --- 
 
 ###  Multi-Container Exercises (31 ex)

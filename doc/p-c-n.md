@@ -54,6 +54,12 @@ winpty kubectl exec -it debug -- sh
 | `nc -zv`           | Verifica la raggiungibilità di una porta TCP                                    |           Pattern TCP          |
 | `sleep 3600`       | Mantiene il Pod in esecuzione per il debug                                      |         Pod persistente        |
 
+| Opzione | Significato                                                       |
+| ------- | ----------------------------------------------------------------- |
+| `-q`    | Quiet mode (non mostra il progresso del download)                 |
+| `-O-`   | Scrive il contenuto scaricato su **stdout** invece che in un file |
+
+
 | Voglio...                                     | Opzioni                                 |
 | --------------------------------------------- | --------------------------------------- |
 | Aprire una shell (`sh`, `bash`)               | `-it`                                   |

@@ -27,6 +27,8 @@
 
 - 0.1 [KodeKlaud Free Challenges](./exercises/challenges.md)
 
+- 0.2 [Killer.sh Exam Simulation](./exems/killer.md)
+
 - 1 [Practice Labs](./exercises/lab.md)
 
 - 2 [Mock Exams](./exems/exams.md)

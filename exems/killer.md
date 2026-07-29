@@ -21,7 +21,8 @@ Save the list to /opt/course/1/namespaces on ckad5601.
 
 <details>
 <summary><strong>Mostra soluzione</strong></summary>
-
+  
+```
 k get ns > /opt/course/1/namespaces
 The content should then look like:
 
@@ -35,7 +36,7 @@ kube-public       Active   136m
 kube-system       Active   136m
 mars              Active   105m
 shell-intern      Active   105m
-
+```
 </details>
 
 ---

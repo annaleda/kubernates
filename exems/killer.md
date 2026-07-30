@@ -1,12 +1,33 @@
-# Esame Killer.sh – CKAD Simulator Kubernetes 1.35
-
-Trascrizione ordinata delle domande e delle soluzioni contenute nel materiale fornito.
+## CKAD Killer Workbook – Kubernetes 1.35
 
 Each question needs to be solved on a specific instance other than your main candidate@terminal. You'll need to connect to the correct instance via ssh, the command is provided before each question. To connect to a different instance you always need to return first to your main terminal by running the exit command, from there you can connect to a different one.
 
 In the real exam each question will be solved on a different instance whereas in the simulator multiple questions will be solved on same instances.
 
 ---
+
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+### Obiettivo
+Preparare alcuni Namespace, così il comando richiesto produce un elenco simile al simulatore.
+
+```bash
+kubectl create namespace earth --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace mars --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace jupiter --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace shell-intern --dry-run=client -o yaml | kubectl apply -f -
+mkdir -p /opt/course/1
+rm -f /opt/course/1/namespaces
+```
+
+Verifica:
+
+```bash
+kubectl get namespaces
+```
+
+</details>
 
 <details open>
 <summary><strong>Question 1 | Namespaces</strong></summary>
@@ -24,7 +45,7 @@ Save the list to `/opt/course/1/namespaces` on ckad5601.
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
   
 ```
 k get ns > /opt/course/1/namespaces
@@ -45,6 +66,27 @@ shell-intern      Active   105m
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+L'esercizio richiede un ambiente pulito nel Namespace `default`.
+
+```bash
+kubectl -n default delete pod pod1 --ignore-not-found
+mkdir -p /opt/course/2
+rm -f /opt/course/2/pod1-status-command.sh
+```
+
+Verifica:
+
+```bash
+kubectl -n default get pod pod1
+```
+
+Il Pod deve risultare assente.
+
+</details>
+
 <details open>
 <summary><strong>Question 2 | Pods</strong></summary>
 
@@ -59,7 +101,7 @@ Your manager would like to run a command manually on occasion to output the stat
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 ```
 k run # help
@@ -117,6 +159,26 @@ Running
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+Creare il Namespace e la directory di lavoro, senza creare il Job richiesto.
+
+```bash
+kubectl create namespace neptune --dry-run=client -o yaml | kubectl apply -f -
+kubectl -n neptune delete job neb-new-job --ignore-not-found
+mkdir -p /opt/course/3
+rm -f /opt/course/3/job.yaml
+```
+
+Verifica:
+
+```bash
+kubectl -n neptune get jobs
+```
+
+</details>
+
 <details open>
 <summary><strong>Question 3 | Job</strong></summary>
 
@@ -131,7 +193,7 @@ Start the Job and check its history. Each pod created by the Job should have the
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 ```
 k -n neptune create job -h
@@ -214,6 +276,74 @@ At the age column we can see that two pods run parallel and the third one after 
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+### Requisiti
+
+- Helm 3 installato.
+- Accesso alle immagini container usate dai chart.
+- Un cluster Kubernetes funzionante.
+
+### Variante locale equivalente
+
+Il repository privato `killershell` non è disponibile fuori dal simulatore. Creare quindi due chart locali minimi con più versioni.
+
+```bash
+kubectl create namespace mercury --dry-run=client -o yaml | kubectl apply -f -
+mkdir -p /opt/course/4/charts
+cd /opt/course/4/charts
+helm create nginx
+helm create apache
+```
+
+Impostare nel chart `nginx` una prima versione e utilizzare un'immagine nginx:
+
+```bash
+sed -i 's/^version:.*/version: 1.0.0/' nginx/Chart.yaml
+sed -i 's/^appVersion:.*/appVersion: "1.25"/' nginx/Chart.yaml
+sed -i 's/repository: nginx/repository: nginx/' nginx/values.yaml
+```
+
+Installare le release iniziali:
+
+```bash
+helm upgrade --install internal-issue-report-apiv1 ./nginx -n mercury
+helm upgrade --install internal-issue-report-apiv2 ./nginx -n mercury
+helm upgrade --install internal-issue-report-app ./nginx -n mercury
+```
+
+Creare una versione più recente del chart, che sarà disponibile per l'upgrade:
+
+```bash
+sed -i 's/^version:.*/version: 1.1.0/' nginx/Chart.yaml
+```
+
+Per il chart Apache, impostare l'immagine e mantenere `replicaCount` configurabile:
+
+```bash
+sed -i 's/repository: nginx/repository: httpd/' apache/values.yaml
+```
+
+Creare infine una release volutamente fallita, equivalente portabile della release Killer bloccata in `pending-install`:
+
+```bash
+helm uninstall internal-issue-report-broken -n mercury 2>/dev/null || true
+helm install internal-issue-report-broken ./nginx -n mercury \
+  --set image.repository=repository.invalid/example \
+  --wait --timeout 10s || true
+```
+
+> Fuori da Killer.sh lo stato può essere `failed` anziché `pending-install`. Lo scopo didattico resta trovare e rimuovere la release non sana.
+
+Verifica:
+
+```bash
+helm list -n mercury --all
+```
+
+</details>
+
 <details open>
 <summary><strong>Question 4 | Helm Management</strong></summary>
 
@@ -234,7 +364,7 @@ There seems to be a broken release, stuck in pending-install state. Find it and 
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 Helm Chart: Kubernetes YAML template-files combined into a single package, Values allow customisation
 
@@ -375,6 +505,40 @@ Thank you Helm for making our lives easier! (Till something breaks)
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+Creare il ServiceAccount e un Secret di tipo token associato. Kubernetes popolerà automaticamente il campo `data.token`.
+
+```bash
+kubectl create namespace neptune --dry-run=client -o yaml | kubectl apply -f -
+kubectl -n neptune create serviceaccount neptune-sa-v2 \
+  --dry-run=client -o yaml | kubectl apply -f -
+
+cat <<'EOF' | kubectl apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: neptune-secret-1
+  namespace: neptune
+  annotations:
+    kubernetes.io/service-account.name: neptune-sa-v2
+type: kubernetes.io/service-account-token
+EOF
+
+mkdir -p /opt/course/5
+rm -f /opt/course/5/token
+```
+
+Attendere il popolamento del token e verificare:
+
+```bash
+kubectl -n neptune get serviceaccount neptune-sa-v2
+kubectl -n neptune get secret neptune-secret-1 -o jsonpath='{.data.token}'
+```
+
+</details>
+
 <details open>
 <summary><strong>Question 5 | ServiceAccount, Secret</strong></summary>
 
@@ -387,7 +551,7 @@ Team Neptune has its own ServiceAccount named `neptune-sa-v2` in Namespace neptu
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 Secrets won't be created automatically for ServiceAccounts, but it's possible to create a Secret manually and attach it to a ServiceAccount by setting the correct annotation on the Secret. This was done for this task.
 ```
@@ -426,6 +590,19 @@ eyJhbGciOiJSUzI1NiIsImtpZCI6Im5aZFdqZDJ2aGNvQ3BqWHZOR1g1b3pIcm5JZ0hHNWxTZkwzQnFa
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+Nessuna risorsa iniziale è necessaria. Pulire un'eventuale esecuzione precedente.
+
+```bash
+kubectl -n default delete pod pod6 --ignore-not-found
+mkdir -p /opt/course/6
+rm -f /opt/course/6/6.yaml
+```
+
+</details>
+
 <details open>
 <summary><strong>Question 6 | ReadinessProbe</strong></summary>
 
@@ -440,7 +617,7 @@ The Pod should run the command `touch /tmp/ready && sleep 1d`, which will create
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 ```
 k run pod6 --image=busybox:1.31.0 --dry-run=client -oyaml --command -- sh -c "touch /tmp/ready && sleep 1d" > 6.yaml
@@ -499,6 +676,37 @@ We see that the Pod is finally ready.
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+Creare i Namespace e sei Pod simili. Solo `webserver-sat-003` deve contenere il riferimento a `my-happy-shop`.
+
+```bash
+kubectl create namespace saturn --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace neptune --dry-run=client -o yaml | kubectl apply -f -
+kubectl -n saturn delete pod -l exercise=q7 --ignore-not-found
+kubectl -n neptune delete pod webserver-sat-003 --ignore-not-found
+
+for i in 001 002 004 005 006; do
+  kubectl -n saturn run webserver-sat-$i --image=nginx:1.16.1-alpine \
+    --labels="id=webserver-sat-$i,exercise=q7"
+done
+
+kubectl -n saturn run webserver-sat-003 --image=nginx:1.16.1-alpine \
+  --labels='id=webserver-sat-003,exercise=q7'
+kubectl -n saturn annotate pod webserver-sat-003 \
+  description='this is the server for the E-Commerce System my-happy-shop'
+```
+
+Verifica:
+
+```bash
+kubectl -n saturn get pods --show-labels
+kubectl -n saturn get pod -o yaml | grep my-happy-shop -B5 -A5
+```
+
+</details>
+
 <details open>
 <summary><strong>Question 7 | Pods, Namespaces</strong></summary>
 
@@ -513,7 +721,7 @@ Search for the correct Pod in Namespace `saturn` and move it to Namespace `neptu
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 Let's see all those Pods:
 
@@ -573,6 +781,38 @@ This should list only one pod called webserver-sat-003 in Namespace neptune, sta
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+Creare una cronologia di rollout e lasciare l'ultima revisione in errore per un'immagine digitata male.
+
+```bash
+kubectl create namespace neptune --dry-run=client -o yaml | kubectl apply -f -
+kubectl -n neptune delete deployment api-new-c32 --ignore-not-found
+
+kubectl -n neptune create deployment api-new-c32 --image=nginx:1.25-alpine --replicas=3
+kubectl -n neptune annotate deployment api-new-c32 kubernetes.io/change-cause='initial working image'
+kubectl -n neptune rollout status deployment api-new-c32
+
+kubectl -n neptune set image deployment/api-new-c32 nginx=nginx:1.26-alpine
+kubectl -n neptune annotate deployment api-new-c32 kubernetes.io/change-cause='upgrade to nginx 1.26' --overwrite
+kubectl -n neptune rollout status deployment api-new-c32
+
+kubectl -n neptune set image deployment/api-new-c32 nginx=ngnix:1-alpine
+kubectl -n neptune annotate deployment api-new-c32 kubernetes.io/change-cause='mistyped image name' --overwrite
+```
+
+Attendere qualche secondo, quindi verificare:
+
+```bash
+kubectl -n neptune rollout history deployment api-new-c32
+kubectl -n neptune get deployment,replicaset,pod | grep api-new-c32
+```
+
+Il nuovo Pod deve entrare in `ImagePullBackOff`, mentre i Pod della revisione precedente restano disponibili.
+
+</details>
+
 <details open>
 <summary><strong>Question 8 | Deployment, Rollouts</strong></summary>
 
@@ -585,7 +825,7 @@ There is an existing Deployment named `api-new-c32` in Namespace `neptune`. A de
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 ```
 k -n neptune get deploy # overview
@@ -638,6 +878,64 @@ k -n neptune get rs -o wide | grep api-new-c32
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+Creare il Namespace, il Pod originale e il file sorgente che il candidato dovrà trasformare in Deployment.
+
+```bash
+kubectl create namespace pluto --dry-run=client -o yaml | kubectl apply -f -
+mkdir -p /opt/course/9
+kubectl -n pluto delete deployment holy-api --ignore-not-found
+kubectl -n pluto delete pod holy-api --ignore-not-found
+
+cat <<'EOF' > /opt/course/9/holy-api-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: holy-api
+  namespace: pluto
+  labels:
+    id: holy-api
+spec:
+  containers:
+  - name: holy-api-container
+    image: nginx:1.17.3-alpine
+    env:
+    - name: CACHE_KEY_1
+      value: 'b&MTCi0=[T66RXm!jO@'
+    - name: CACHE_KEY_2
+      value: 'PCAILGej5Ld@Q%{Q1=#'
+    - name: CACHE_KEY_3
+      value: '2qz-]2OJlWDSTn_;RFQ'
+    volumeMounts:
+    - name: cache-volume1
+      mountPath: /cache1
+    - name: cache-volume2
+      mountPath: /cache2
+    - name: cache-volume3
+      mountPath: /cache3
+  volumes:
+  - name: cache-volume1
+    emptyDir: {}
+  - name: cache-volume2
+    emptyDir: {}
+  - name: cache-volume3
+    emptyDir: {}
+EOF
+
+kubectl apply -f /opt/course/9/holy-api-pod.yaml
+rm -f /opt/course/9/holy-api-deployment.yaml
+```
+
+Verifica:
+
+```bash
+kubectl -n pluto get pod holy-api
+```
+
+</details>
+
 <details open>
 <summary><strong>Question 9 | Pod -> Deployment</strong></summary>
 
@@ -656,7 +954,7 @@ Please create the Deployment and save its yaml under /opt/course/9/holy-api-depl
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 There are multiple ways to do this, one is to copy an Deployment example from https://kubernetes.io/docs and then merge it with the existing Pod yaml. That's what we will do now:
 
@@ -741,6 +1039,21 @@ deployment.extensions/holy-api   3/3     3            3           2m4s
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+Preparare esclusivamente il Namespace e le directory. Pod, Service e file di output devono essere creati dal candidato.
+
+```bash
+kubectl create namespace pluto --dry-run=client -o yaml | kubectl apply -f -
+kubectl -n pluto delete pod project-plt-6cc-api --ignore-not-found
+kubectl -n pluto delete service project-plt-6cc-svc --ignore-not-found
+mkdir -p /opt/course/10
+rm -f /opt/course/10/service_test.html /opt/course/10/service_test.log
+```
+
+</details>
+
 <details open>
 <summary><strong>Question 10 | Service, Logs</strong></summary>
 
@@ -755,7 +1068,7 @@ Finally use for example curl from a temporary nginx:alpine Pod to get the respon
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 ```
 k -n pluto run project-plt-6cc-api --image=nginx:1.17.3-alpine --labels project=plt-6cc-api
@@ -881,6 +1194,74 @@ k -n pluto logs project-plt-6cc-api > /opt/course/10/service_test.log
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+### Requisiti locali
+
+Installare Docker e Podman e predisporre un registry locale sulla porta `5000`. Fuori dal simulatore utilizzare `localhost:5000` al posto di `registry.killer.sh:5000`.
+
+```bash
+mkdir -p /opt/course/11/image
+sudo docker rm -f registry 2>/dev/null || true
+sudo docker run -d --restart=always --name registry -p 5000:5000 registry:2
+```
+
+Creare l'applicazione Go:
+
+```bash
+cat <<'EOF' > /opt/course/11/image/go.mod
+module sun-cipher
+
+go 1.20
+EOF
+
+cat <<'EOF' > /opt/course/11/image/main.go
+package main
+
+import (
+  "fmt"
+  "math/rand"
+  "os"
+  "time"
+)
+
+func main() {
+  id := os.Getenv("SUN_CIPHER_ID")
+  for {
+    fmt.Printf("random number for %s is %d\n", id, rand.Intn(10000))
+    time.Sleep(10 * time.Second)
+  }
+}
+EOF
+
+cat <<'EOF' > /opt/course/11/image/Dockerfile
+FROM golang:1.22-alpine AS build
+WORKDIR /src
+COPY . .
+RUN CGO_ENABLED=0 go build -o /app .
+
+FROM alpine:3.20
+COPY --from=build /app /app
+ENV SUN_CIPHER_ID=CHANGE_ME
+CMD ["/app"]
+EOF
+
+rm -f /opt/course/11/logs
+```
+
+Verifica:
+
+```bash
+sudo docker info >/dev/null
+sudo podman info >/dev/null
+curl -s http://localhost:5000/v2/_catalog
+```
+
+> Nei comandi della domanda sostituire il registry Killer con `localhost:5000` quando si usa questa variante locale.
+
+</details>
+
 <details open>
 <summary><strong>Question 11 | Working with Containers</strong></summary>
 
@@ -905,7 +1286,7 @@ Write the logs your container sun-cipher produces into /opt/course/11/logs on ck
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 Dockerfile: list of commands from which an Image can be build
 
@@ -1020,6 +1401,32 @@ This is looking not too bad at all. Our container skills are back in town!
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+Preparare il Namespace e rimuovere eventuali risorse omonime. La directory hostPath deve esistere su ogni nodo sul quale può essere schedulato il Pod.
+
+```bash
+kubectl create namespace earth --dry-run=client -o yaml | kubectl apply -f -
+kubectl -n earth delete deployment project-earthflower --ignore-not-found
+kubectl -n earth delete pvc earth-project-earthflower-pvc --ignore-not-found
+kubectl delete pv earth-project-earthflower-pv --ignore-not-found
+
+sudo mkdir -p /Volumes/Data
+sudo chmod 777 /Volumes/Data
+```
+
+Verifica:
+
+```bash
+kubectl get pv earth-project-earthflower-pv
+kubectl -n earth get pvc earth-project-earthflower-pvc
+```
+
+Entrambe le risorse devono essere assenti.
+
+</details>
+
 <details open>
 <summary><strong>Question 12 | Storage, PV, PVC, Pod volume</strong></summary>
 
@@ -1036,7 +1443,7 @@ Finally create a new Deployment project-earthflower in Namespace earth which mou
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 ```
 vim 12_pv.yaml
@@ -1135,6 +1542,23 @@ We can confirm it's mounting correctly:
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+Creare il Namespace e rimuovere le risorse omonime. Non installare alcun provisioner chiamato `moon-retainer`.
+
+```bash
+kubectl create namespace moon --dry-run=client -o yaml | kubectl apply -f -
+kubectl -n moon delete pvc moon-pvc-126 --ignore-not-found
+kubectl delete storageclass moon-retain --ignore-not-found
+mkdir -p /opt/course/13
+rm -f /opt/course/13/pvc-126-reason
+```
+
+Il PVC creato dal candidato dovrà restare `Pending`, perché il provisioner è intenzionalmente inesistente.
+
+</details>
+
 <details open>
 <summary><strong>Question 13 | Storage, StorageClass, PVC</strong></summary>
 
@@ -1149,7 +1573,7 @@ The provisioner moon-retainer will be created by another team, so it's expected 
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 ```
 vim 13_sc.yaml
@@ -1203,6 +1627,81 @@ Waiting for a volume to be created either by the external provisioner 'moon-reta
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+Creare il Namespace, il Pod originale e il file del secondo Secret. Non creare ancora `secret1` o `secret2`.
+
+```bash
+kubectl create namespace moon --dry-run=client -o yaml | kubectl apply -f -
+mkdir -p /opt/course/14
+kubectl -n moon delete pod secret-handler --ignore-not-found
+kubectl -n moon delete secret secret1 secret2 --ignore-not-found
+
+cat <<'EOF' > /opt/course/14/secret-handler.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secret-handler
+  namespace: moon
+  labels:
+    id: secret-handler
+    uuid: 1428721e-8d1c-4c09-b5d6-afd79200c56a
+    red_ident: 9cf7a7c0-fdb2-4c35-9c13-c2a0bb52b4a9
+    type: automatic
+spec:
+  containers:
+  - name: secret-handler
+    image: bash:5.0.11
+    args: ['bash', '-c', 'sleep 2d']
+    env:
+    - name: SECRET_KEY_1
+      value: '>8$kH#kj..i8}HImQd{'
+    - name: SECRET_KEY_2
+      value: 'IO=a4L/XkRdvN8jM=Y+'
+    - name: SECRET_KEY_3
+      value: '-7PA0_Z]>{pwa43r)__'
+    volumeMounts:
+    - name: cache-volume1
+      mountPath: /cache1
+    - name: cache-volume2
+      mountPath: /cache2
+    - name: cache-volume3
+      mountPath: /cache3
+  volumes:
+  - name: cache-volume1
+    emptyDir: {}
+  - name: cache-volume2
+    emptyDir: {}
+  - name: cache-volume3
+    emptyDir: {}
+EOF
+
+cat <<'EOF' > /opt/course/14/secret2.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: secret2
+type: Opaque
+stringData:
+  key: '12345678'
+EOF
+
+kubectl apply -f /opt/course/14/secret-handler.yaml
+rm -f /opt/course/14/secret-handler-new.yaml
+```
+
+Verifica:
+
+```bash
+kubectl -n moon get pod secret-handler
+kubectl -n moon get secret secret1 secret2
+```
+
+Il Pod deve essere `Running`; i due Secret devono essere assenti.
+
+</details>
+
 <details open>
 <summary><strong>Question 14 | Secret, Secret-Volume, Secret-Env</strong></summary>
 
@@ -1217,7 +1716,7 @@ There is existing yaml for another Secret at /opt/course/14/secret2.yaml, create
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 ```
 k -n moon get pod # show pods
@@ -1336,6 +1835,67 @@ SECRET1_PASS=pwd
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+Creare il file HTML e un Deployment già configurato per montare una ConfigMap che non esiste. I Pod resteranno bloccati con `FailedMount` finché il candidato non crea la ConfigMap.
+
+```bash
+kubectl create namespace moon --dry-run=client -o yaml | kubectl apply -f -
+mkdir -p /opt/course/15
+kubectl -n moon delete configmap configmap-web-moon-html --ignore-not-found
+
+cat <<'EOF' > /opt/course/15/web-moon.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Web Moon Webpage</title>
+</head>
+<body>
+This is some great content.
+</body>
+</html>
+EOF
+
+cat <<'EOF' | kubectl apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-moon
+  namespace: moon
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      id: web-moon
+  template:
+    metadata:
+      labels:
+        id: web-moon
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.25-alpine
+        volumeMounts:
+        - name: html-volume
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: html-volume
+        configMap:
+          name: configmap-web-moon-html
+EOF
+```
+
+Verifica:
+
+```bash
+kubectl -n moon get deployment,pod | grep web-moon
+kubectl -n moon describe pod -l id=web-moon | grep -A3 FailedMount
+```
+
+</details>
+
 <details open>
 <summary><strong>Question 15 | ConfigMap, Configmap-Volume</strong></summary>
 
@@ -1350,7 +1910,7 @@ The Deployment web-moon is already configured to work with this ConfigMap and se
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 Let's check the existing Pods:
 ```
@@ -1438,6 +1998,60 @@ Here it was important that the file will have the name index.html and not the or
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+Creare il Deployment `cleaner` già funzionante e salvare il manifesto originale. Il candidato dovrà aggiungere il sidecar.
+
+```bash
+kubectl create namespace mercury --dry-run=client -o yaml | kubectl apply -f -
+mkdir -p /opt/course/16
+cat <<'EOF' > /opt/course/16/cleaner.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cleaner
+  namespace: mercury
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      id: cleaner
+  template:
+    metadata:
+      labels:
+        id: cleaner
+    spec:
+      volumes:
+      - name: logs
+        emptyDir: {}
+      initContainers:
+      - name: init
+        image: bash:5.0.11
+        command: ['bash', '-c', 'echo init > /var/log/cleaner/cleaner.log']
+        volumeMounts:
+        - name: logs
+          mountPath: /var/log/cleaner
+      containers:
+      - name: cleaner-con
+        image: bash:5.0.11
+        args: ['bash', '-c', 'while true; do echo `date`: "remove random file" >> /var/log/cleaner/cleaner.log; sleep 1; done']
+        volumeMounts:
+        - name: logs
+          mountPath: /var/log/cleaner
+EOF
+kubectl apply -f /opt/course/16/cleaner.yaml
+rm -f /opt/course/16/cleaner-new.yaml
+```
+
+Verifica:
+
+```bash
+kubectl -n mercury rollout status deployment cleaner
+```
+
+</details>
+
 <details open>
 <summary><strong>Question 16 | Logging sidecar</strong></summary>
 
@@ -1456,7 +2070,7 @@ Check if the logs of the new container reveal something about the missing data i
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 Sidecar containers in K8s are initContainers with restartPolicy: Always. Search for "Sidecar Containers" in the K8s Docs to familiarise yourself if necessary.
 
@@ -1567,6 +2181,47 @@ Mystery solved, something is removing files at random ;) It's important to under
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+Creare il file iniziale, ma non il Deployment.
+
+```bash
+kubectl create namespace mars --dry-run=client -o yaml | kubectl apply -f -
+mkdir -p /opt/course/17
+kubectl -n mars delete deployment test-init-container --ignore-not-found
+cat <<'EOF' > /opt/course/17/test-init-container.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-init-container
+  namespace: mars
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      id: test-init-container
+  template:
+    metadata:
+      labels:
+        id: test-init-container
+    spec:
+      volumes:
+      - name: web-content
+        emptyDir: {}
+      containers:
+      - name: nginx
+        image: nginx:1.17.3-alpine
+        volumeMounts:
+        - name: web-content
+          mountPath: /usr/share/nginx/html
+        ports:
+        - containerPort: 80
+EOF
+```
+
+</details>
+
 <details open>
 <summary><strong>Question 17 | InitContainer</strong></summary>
 
@@ -1583,7 +2238,7 @@ The InitContainer should be using image busybox:1.31.0. Test your implementation
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
   
 ```
 cp /opt/course/17/test-init-container.yaml ~/17_test-init-container.yaml
@@ -1641,6 +2296,60 @@ Beautiful.
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+Creare Deployment e Service, lasciando intenzionalmente errato il selettore del Service.
+
+```bash
+kubectl create namespace mars --dry-run=client -o yaml | kubectl apply -f -
+cat <<'EOF' | kubectl apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: manager-api-deployment
+  namespace: mars
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      id: manager-api-pod
+  template:
+    metadata:
+      labels:
+        id: manager-api-pod
+    spec:
+      containers:
+      - name: manager-api
+        image: nginx:1.25-alpine
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: manager-api-svc
+  namespace: mars
+spec:
+  selector:
+    id: manager-api-deployment
+  ports:
+  - port: 4444
+    targetPort: 80
+EOF
+```
+
+Verifica:
+
+```bash
+kubectl -n mars rollout status deployment manager-api-deployment
+kubectl -n mars get endpointslice -l kubernetes.io/service-name=manager-api-svc
+```
+
+Il Service non deve avere Endpoint.
+
+</details>
+
 <details open>
 <summary><strong>Question 18 | Service misconfiguration</strong></summary>
 
@@ -1655,7 +2364,7 @@ You can test this with curl manager-api-svc.mars:4444 from a temporary nginx:alp
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 First let's get an overview:
 
@@ -1769,6 +2478,61 @@ Short manager-api-svc.mars or long manager-api-svc.mars.svc.cluster.local work.
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+Creare un Deployment Apache e un Service inizialmente `ClusterIP`.
+
+```bash
+kubectl create namespace jupiter --dry-run=client -o yaml | kubectl apply -f -
+cat <<'EOF' | kubectl apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jupiter-crew-deploy
+  namespace: jupiter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      id: jupiter-crew
+  template:
+    metadata:
+      labels:
+        id: jupiter-crew
+    spec:
+      containers:
+      - name: apache
+        image: httpd:2.4-alpine
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jupiter-crew-svc
+  namespace: jupiter
+spec:
+  type: ClusterIP
+  selector:
+    id: jupiter-crew
+  ports:
+  - port: 8080
+    targetPort: 80
+EOF
+```
+
+Verifica:
+
+```bash
+kubectl -n jupiter rollout status deployment jupiter-crew-deploy
+kubectl -n jupiter get service jupiter-crew-svc
+```
+
+> Su Kind, Minikube, k3d o Docker Desktop l'IP del nodo può non essere raggiungibile direttamente dall'host. In quel caso eseguire il test da una rete che raggiunge il nodo oppure usare il comando specifico della piattaforma, come `minikube service`.
+
+</details>
+
 <details open>
 <summary><strong>Question 19 | Service ClusterIP->NodePort</strong></summary>
 
@@ -1783,7 +2547,7 @@ Test the NodePort Service using the internal IP of all available nodes and the p
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 First we get an overview:
 
@@ -1853,6 +2617,92 @@ Here we only have one node in the cluster, but the Service would be reachable on
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+Il cluster deve usare un plugin CNI che applichi le NetworkPolicy, come Cilium, Calico o Antrea.
+
+```bash
+kubectl create namespace venus --dry-run=client -o yaml | kubectl apply -f -
+kubectl -n venus delete networkpolicy np1 --ignore-not-found
+cat <<'EOF' | kubectl apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: venus
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      id: api
+  template:
+    metadata:
+      labels:
+        id: api
+    spec:
+      containers:
+      - name: api
+        image: httpd:2.4-alpine
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+  namespace: venus
+spec:
+  selector:
+    id: api
+  ports:
+  - port: 2222
+    targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: venus
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      id: frontend
+  template:
+    metadata:
+      labels:
+        id: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: nginx:alpine
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: venus
+spec:
+  selector:
+    id: frontend
+  ports:
+  - port: 80
+    targetPort: 80
+EOF
+```
+
+Verifica iniziale:
+
+```bash
+kubectl -n venus rollout status deployment api
+kubectl -n venus rollout status deployment frontend
+POD=$(kubectl -n venus get pod -l id=frontend -o jsonpath='{.items[0].metadata.name}')
+kubectl -n venus exec "$POD" -- wget -qO- api:2222
+```
+
+</details>
+
 <details open>
 <summary><strong>Question 20 | NetworkPolicy</strong></summary>
 
@@ -1867,7 +2717,7 @@ Test using: wget www.google.com and wget api:2222 from a Pod of Deployment front
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 
 INFO: For learning NetworkPolicies check out https://editor.cilium.io. But you're not allowed to use it during the exam.
@@ -1988,6 +2838,25 @@ Connecting to api:2222 (10.3.255.137:2222)
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+Creare il Namespace e il ServiceAccount; il Deployment deve essere assente.
+
+```bash
+kubectl create namespace neptune --dry-run=client -o yaml | kubectl apply -f -
+kubectl -n neptune create serviceaccount neptune-sa-v2 --dry-run=client -o yaml | kubectl apply -f -
+kubectl -n neptune delete deployment neptune-10ab --ignore-not-found
+```
+
+Verifica:
+
+```bash
+kubectl -n neptune get serviceaccount neptune-sa-v2
+```
+
+</details>
+
 <details open>
 <summary><strong>Question 21 | Requests and Limits, ServiceAccount</strong></summary>
 
@@ -2002,7 +2871,7 @@ Team Neptune has its own ServiceAccount neptune-sa-v2 under which the Pods shoul
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 ```
 k -n neptune create deployment -h # help
@@ -2058,6 +2927,48 @@ neptune-10ab-7d4b8d45b-z5hcc   1/1     Running            0          17s
 
 ---
 
+<details>
+<summary><strong>Preparation Environment</strong></summary>
+
+Creare un insieme di Pod con label differenti. I Pod `worker` e `runner` dovranno essere modificati dal candidato; quelli `test` e `messenger` fungeranno da controllo.
+
+```bash
+kubectl create namespace sun --dry-run=client -o yaml | kubectl apply -f -
+kubectl -n sun delete pod --all --ignore-not-found
+
+create_pod() {
+  kubectl -n sun run "$1" --image=busybox:1.36 --labels="$2" --command -- sleep 1d
+}
+
+create_pod 0509649a 'type=runner,type_old=messenger'
+create_pod 0509649b 'type=worker'
+create_pod 1428721e 'type=worker'
+create_pod 1428721f 'type=worker'
+create_pod 43b9a 'type=test'
+create_pod 4c09 'type=worker'
+create_pod 4c35 'type=worker'
+create_pod 4fe4 'type=worker'
+create_pod 5555a 'type=messenger'
+create_pod 86cda 'type=runner'
+create_pod 8d1c 'type=messenger'
+create_pod a004a 'type=runner'
+create_pod a94128196 'type=runner,type_old=messenger'
+create_pod afd79200c56a 'type=worker'
+create_pod b667 'type=worker'
+create_pod fdb2 'type=worker'
+```
+
+Verifica:
+
+```bash
+kubectl -n sun get pod --show-labels
+kubectl -n sun get pod -l 'type in (worker,runner)' --no-headers | wc -l
+```
+
+Il conteggio atteso è `13`.
+
+</details>
+
 <details open>
 <summary><strong>Question 22 | Labels, Annotations</strong></summary>
 
@@ -2070,7 +2981,7 @@ Team Sunny needs to identify some of their Pods in namespace sun. They ask you t
 </details>
 
 <details>
-<summary><strong>Mostra soluzione</strong></summary>
+<summary><strong>Solution</strong></summary>
 
 ```
 ➜ k -n sun get pod --show-labels

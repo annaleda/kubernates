@@ -94,7 +94,7 @@ Pods kubectl Commands
 
 **Istanza:** `ssh ckad5601`
 
-Create a single Pod of image `httpd:2.4.41-alpine` in Namespace default. The Pod should be named pod1 and the container should be named `pod1-container`.
+Create a single Pod of image `httpd:2.4.41-alpine` in Namespace default. The Pod should be named `pod1` and the container should be named `pod1-container`.
 
 Your manager would like to run a command manually on occasion to output the status of that exact Pod. Please write a command that does this into `/opt/course/2/pod1-status-command.sh` on ckad5601. The command should use `kubectl`.
 
@@ -186,7 +186,7 @@ Jobs
 
 **Istanza:** `ssh ckad7326`
 
-Team Neptune needs a Job template located at `/opt/course/3/job.yaml`. This Job should run image `busybox:1.31.0` and execute `sleep 2 && echo done`. It should be in namespace `neptune`, run a total of ``3 times and should execute `2` runs in parallel.
+Team Neptune needs a Job template located at `/opt/course/3/job.yaml`. This Job should run image `busybox:1.31.0` and execute `sleep 2 && echo done`. It should be in namespace `neptune`, run a total of `3` times and should execute `2` runs in parallel.
 
 Start the Job and check its history. Each pod created by the Job should have the label id: `awesome-job`. The job should be named `neb-new-job` and the container `neb-new-job-container`.
 
@@ -945,9 +945,9 @@ Deployments Configure a Security Context
 
 In Namespace pluto there is single Pod named `holy-api`. It has been working okay for a while now but Team Pluto needs it to be more reliable.
 
-Convert the Pod into a Deployment named holy-api with 3 replicas and delete the single Pod once done. The raw Pod template file is available at /opt/course/9/holy-api-pod.yaml.
+Convert the Pod into a Deployment named holy-api with 3 replicas and delete the single Pod once done. The raw Pod template file is available at `/opt/course/9/holy-api-pod.yaml`.
 
-In addition, the new Deployment should set `allowPrivilegeEscalation`: false and privileged: false for the security context on container level.
+In addition, the new Deployment should set `allowPrivilegeEscalation`: false and `privileged: false` for the security context on container level.
 
 Please create the Deployment and save its yaml under /opt/course/9/holy-api-deployment.yaml on ckad9043.
 
@@ -1061,9 +1061,9 @@ Service Connecting Applications with Services
 
 **Istanza:** `ssh ckad9043`
 
-Team Pluto needs a new cluster internal Service. Create a ClusterIP Service named `project-plt-6cc-svc` in Namespace `pluto`. This Service should expose a single Pod named project-plt-6cc-api of image nginx:1.17.3-alpine, create that Pod as well. The Pod should be identified by label project: plt-6cc-api. The Service should use tcp port redirection of 3333:80.
+Team Pluto needs a new cluster internal Service. Create a ClusterIP Service named `project-plt-6cc-svc` in Namespace `pluto`. This Service should expose a single Pod named `project-plt-6cc-api` of image `nginx:1.17.3-alpine`, create that Pod as well. The Pod should be identified by label `project: plt-6cc-api`. The Service should use tcp port redirection of 3333:80.
 
-Finally use for example curl from a temporary nginx:alpine Pod to get the response from the Service. Write the response into /opt/course/10/service_test.html on ckad9043. Also check if the logs of Pod project-plt-6cc-api show the request and write those into /opt/course/10/service_test.log on ckad9043.
+Finally use for example `curl from a temporary nginx:alpine Pod` to get the response from the Service. Write the response into `/opt/course/10/service_test.html` on ckad9043. Also check if the logs of Pod `project-plt-6cc-api` show the request and write those into `/opt/course/10/service_test.log` on ckad9043.
 
 </details>
 
@@ -1275,9 +1275,9 @@ Run all Docker and Podman commands as user root. Use sudo docker and sudo podman
 
 Change the Dockerfile: set ENV variable `SUN_CIPHER_ID` to hardcoded value `5b9c1065-e39d-4a43-a04a-e59bcea3e03f`
 
-Build the image using sudo docker, tag it registry.killer.sh:5000/sun-cipher:v1-docker and push it to the registry
+Build the image using sudo docker, tag it `registry.killer.sh:5000/sun-cipher:v1-docker` and push it to the registry
 
-Build the image using sudo podman, tag it registry.killer.sh:5000/sun-cipher:v1-podman and push it to the registry
+Build the image using sudo podman, tag it `registry.killer.sh:5000/sun-cipher:v1-podman` and push it to the registry
 
 Run a container using sudo podman, which keeps running detached in the background, named sun-cipher using image registry.killer.sh:5000/sun-cipher:v1-podman
 

@@ -29,7 +29,7 @@ kubectl get namespaces
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 1 | Namespaces</strong></summary>
 
 Namespaces kubectl Quick Reference
@@ -87,7 +87,7 @@ Il Pod deve risultare assente.
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 2 | Pods</strong></summary>
 
 Pods kubectl Commands
@@ -179,7 +179,7 @@ kubectl -n neptune get jobs
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 3 | Job</strong></summary>
 
 Jobs
@@ -344,7 +344,7 @@ helm list -n mercury --all
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 4 | Helm Management</strong></summary>
 
 Helm Docs
@@ -539,7 +539,7 @@ kubectl -n neptune get secret neptune-secret-1 -o jsonpath='{.data.token}'
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 5 | ServiceAccount, Secret</strong></summary>
 
 Configure Service Accounts for Pods Secrets
@@ -603,7 +603,7 @@ rm -f /opt/course/6/6.yaml
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 6 | ReadinessProbe</strong></summary>
 
 Configure Probes
@@ -707,7 +707,7 @@ kubectl -n saturn get pod -o yaml | grep my-happy-shop -B5 -A5
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 7 | Pods, Namespaces</strong></summary>
 
 Labels and Selectors Namespaces
@@ -813,7 +813,7 @@ Il nuovo Pod deve entrare in `ImagePullBackOff`, mentre i Pod della revisione pr
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 8 | Deployment, Rollouts</strong></summary>
 
 Deployments
@@ -936,7 +936,7 @@ kubectl -n pluto get pod holy-api
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 9 | Pod -> Deployment</strong></summary>
 
 Deployments Configure a Security Context
@@ -1054,7 +1054,7 @@ rm -f /opt/course/10/service_test.html /opt/course/10/service_test.log
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 10 | Service, Logs</strong></summary>
 
 Service Connecting Applications with Services
@@ -1262,7 +1262,7 @@ curl -s http://localhost:5000/v2/_catalog
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 11 | Working with Containers</strong></summary>
 
 Container Images
@@ -1427,7 +1427,7 @@ Entrambe le risorse devono essere assenti.
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 12 | Storage, PV, PVC, Pod volume</strong></summary>
 
 Persistent Volumes Configure a Pod to use storage
@@ -1559,7 +1559,7 @@ Il PVC creato dal candidato dovrà restare `Pending`, perché il provisioner è 
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 13 | Storage, StorageClass, PVC</strong></summary>
 
 Storage Classes Persistent Volumes
@@ -1702,7 +1702,7 @@ Il Pod deve essere `Running`; i due Secret devono essere assenti.
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 14 | Secret, Secret-Volume, Secret-Env</strong></summary>
 
 Secrets
@@ -1896,7 +1896,7 @@ kubectl -n moon describe pod -l id=web-moon | grep -A3 FailedMount
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 15 | ConfigMap, Configmap-Volume</strong></summary>
 
 ConfigMaps Configure a Pod to Use a ConfigMap
@@ -2052,7 +2052,7 @@ kubectl -n mercury rollout status deployment cleaner
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 16 | Logging sidecar</strong></summary>
 
 Sidecar Containers Logging Architecture
@@ -2222,7 +2222,7 @@ EOF
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 17 | InitContainer</strong></summary>
 
 Init Containers
@@ -2350,7 +2350,7 @@ Il Service non deve avere Endpoint.
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 18 | Service misconfiguration</strong></summary>
 
 Debug Services Service
@@ -2533,7 +2533,7 @@ kubectl -n jupiter get service jupiter-crew-svc
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 19 | Service ClusterIP->NodePort</strong></summary>
 
 Service
@@ -2703,7 +2703,7 @@ kubectl -n venus exec "$POD" -- wget -qO- api:2222
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 20 | NetworkPolicy</strong></summary>
 
 Network Policies Declare Network Policy
@@ -2857,7 +2857,7 @@ kubectl -n neptune get serviceaccount neptune-sa-v2
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 21 | Requests and Limits, ServiceAccount</strong></summary>
 
 Resource Management for Pods and Containers Configure Service Accounts for Pods
@@ -2969,7 +2969,7 @@ Il conteggio atteso è `13`.
 
 </details>
 
-<details open>
+<details>
 <summary><strong>Question 22 | Labels, Annotations</strong></summary>
 
 Labels and Selectors Annotations

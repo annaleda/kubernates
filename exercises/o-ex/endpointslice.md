@@ -100,7 +100,21 @@ Preparare l'ambiente come descritto nell'esercizio.
 <details>
 <summary>Soluzione</summary>
 
-> Inserire qui il manifest della soluzione dell'esercizio ES-2.
+```
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: external-api-1
+  labels:
+    kubernetes.io/service-name: external-api
+addressType: IPv4
+ports:
+  - protocol: TCP
+    port: 8080
+endpoints:
+  - addresses:
+      - "10.0.0.50"
+```
 
 </details>
 
@@ -146,8 +160,33 @@ Preparare l'ambiente come descritto nell'esercizio.
 <details>
 <summary>Soluzione</summary>
 
-> Inserire qui il manifest della soluzione dell'esercizio ES-3.
-
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-db
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+    protocol: TCP
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: external-db-1
+  labels:
+    kubernetes.io/service-name: external-db
+addressType: IPv4
+ports:
+- port: 5432
+  protocol: TCP
+endpoints:
+- addresses:
+  - "192.168.1.100"
+  conditions:
+    ready: true
+```
 </details>
 
 <details>
@@ -191,7 +230,37 @@ Preparare l'ambiente come descritto nell'esercizio.
 <details>
 <summary>Soluzione</summary>
 
-> Inserire qui il manifest della soluzione dell'esercizio ES-4.
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-external
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: web-external-1
+  labels:
+    kubernetes.io/service-name: web-external
+addressType: IPv4
+ports:
+- protocol: TCP
+  port: 80
+endpoints:
+- addresses:
+  - "192.168.1.10"
+  conditions:
+    ready: true
+- addresses:
+  - "192.168.1.11"
+  conditions:
+    ready: true
+```
 
 </details>
 
@@ -234,8 +303,41 @@ Preparare l'ambiente come descritto nell'esercizio.
 <details>
 <summary>Soluzione</summary>
 
-> Inserire qui il manifest della soluzione dell'esercizio ES-5.
-
+```
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-services
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-app
+  namespace: external-services
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: external-app-1
+  namespace: external-services
+  labels:
+    kubernetes.io/service-name: external-app
+addressType: IPv4
+ports:
+- port: 8080
+  protocol: TCP
+endpoints:
+- addresses:
+  - "10.0.0.60"
+  conditions:
+    ready: true
+```
+    
 </details>
 
 <details>

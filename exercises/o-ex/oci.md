@@ -1,7 +1,7 @@
 - [ Home ](../../readme.md)   | [ Teoria ](../../arguments.md)   | [ Info Exam ](../../doc/ckad_exam_strategy.md)    | [ Home Other Exercises ](../o_exercises.md) |  [ Cheatsheet Docker ](./Docker_CheatSheet_CKAD.md) |  [ Cheatsheet Podman ](./Podman_CheatSheet_CKAD.md)
 
 ---
-# OCI Images — 11 esercizi
+### OCI Images — 11 esercizi
 
 > Esercizi autonomi su immagini OCI in Kubernetes. Ogni esercizio contiene preparazione, task, validazione, soluzione e cleanup.
 
@@ -1297,5 +1297,499 @@ docker system prune -a -f
 </details>
 
 ---
+## Docker-11 — Login, Tag e Push su Docker Hub
+
+### Preparazione ambiente
+
+Sostituire `<DOCKERHUB_USER>` con il proprio username Docker Hub.
+
+```sh
+docker rmi -f myapp:v1 2>/dev/null || true
+docker rmi -f <DOCKERHUB_USER>/docker-lab:v1 2>/dev/null || true
+
+docker pull alpine:3.20
+docker tag alpine:3.20 myapp:v1
+```
+
+Assicurarsi che esista su Docker Hub il repository:
+
+```text
+<DOCKERHUB_USER>/docker-lab
+```
+
+### Task
+
+1. Effettuare il login su Docker Hub.
+2. Creare il tag:
+
+```text
+<DOCKERHUB_USER>/docker-lab:v1
+```
+
+partendo dall’immagine:
+
+```text
+myapp:v1
+```
+
+3. Pubblicare l’immagine su Docker Hub.
+
+### Validazione
+
+```sh
+docker images <DOCKERHUB_USER>/docker-lab:v1
+```
+
+Verificare il repository sul sito Docker Hub.
+
+### Soluzione
+
+```sh
+docker login
+
+docker tag \
+  myapp:v1 \
+  <DOCKERHUB_USER>/docker-lab:v1
+
+docker push \
+  <DOCKERHUB_USER>/docker-lab:v1
+```
+
+### Cleanup
+
+```sh
+docker logout
+docker rmi -f myapp:v1
+docker rmi -f <DOCKERHUB_USER>/docker-lab:v1
+```
+
+---
+
+## Docker-12 — Pull da Docker Hub
+
+### Preparazione ambiente
+
+Assicurarsi che l’immagine seguente sia già stata pubblicata:
+
+```text
+<DOCKERHUB_USER>/docker-lab:v1
+```
+
+Rimuoverla localmente:
+
+```sh
+docker rmi -f <DOCKERHUB_USER>/docker-lab:v1 2>/dev/null || true
+```
+
+### Task
+
+Scaricare dal Docker Hub l’immagine:
+
+```text
+<DOCKERHUB_USER>/docker-lab:v1
+```
+
+### Validazione
+
+```sh
+docker images <DOCKERHUB_USER>/docker-lab:v1
+docker inspect <DOCKERHUB_USER>/docker-lab:v1
+```
+
+### Soluzione
+
+```sh
+docker pull <DOCKERHUB_USER>/docker-lab:v1
+```
+
+### Cleanup
+
+```sh
+docker rmi -f <DOCKERHUB_USER>/docker-lab:v1
+```
+
+---
+
+## Docker-13 — Dockerfile con variabile d’ambiente
+
+### Preparazione ambiente
+
+```sh
+mkdir -p /tmp/docker-13
+cd /tmp/docker-13
+```
+
+Creare il Dockerfile incompleto:
+
+```sh
+cat > Dockerfile <<'EOF'
+FROM alpine:3.20
+
+# Impostare APP_ENV=production
+
+CMD ["sleep", "3600"]
+EOF
+```
+
+### Task
+
+Modificare il Dockerfile affinché l’immagine contenga la variabile:
+
+```text
+APP_ENV=production
+```
+
+Costruire l’immagine:
+
+```text
+env-app:v1
+```
+
+Avviare un container chiamato:
+
+```text
+env-container
+```
+
+### Validazione
+
+```sh
+docker images env-app:v1
+docker ps --filter name=env-container
+docker exec env-container printenv APP_ENV
+```
+
+Output atteso:
+
+```text
+production
+```
+
+### Soluzione
+
+Dockerfile:
+
+```dockerfile
+FROM alpine:3.20
+
+ENV APP_ENV=production
+
+CMD ["sleep", "3600"]
+```
+
+Build e run:
+
+```sh
+docker build -t env-app:v1 .
+
+docker run -d \
+  --name env-container \
+  env-app:v1
+```
+
+### Cleanup
+
+```sh
+docker rm -f env-container
+docker rmi -f env-app:v1
+rm -rf /tmp/docker-13
+```
+
+---
+
+## Docker-14 — Dockerfile con WORKDIR e COPY
+
+### Preparazione ambiente
+
+```sh
+mkdir -p /tmp/docker-14
+cd /tmp/docker-14
+```
+
+Creare lo script:
+
+```sh
+cat > app.sh <<'EOF'
+#!/bin/sh
+
+echo "Current directory: $(pwd)"
+echo "Hello from Dockerfile"
+sleep 3600
+EOF
+```
+
+Creare il Dockerfile incompleto:
+
+```sh
+cat > Dockerfile <<'EOF'
+FROM alpine:3.20
+
+# Impostare /app come directory di lavoro
+# Copiare app.sh nella directory di lavoro
+# Rendere lo script eseguibile
+# Avviare lo script
+EOF
+```
+
+### Task
+
+Completare il Dockerfile usando:
+
+* `WORKDIR`;
+* `COPY`;
+* `RUN`;
+* `CMD`.
+
+Costruire l’immagine:
+
+```text
+workdir-app:v1
+```
+
+Avviare il container:
+
+```text
+workdir-container
+```
+
+### Validazione
+
+```sh
+docker logs workdir-container
+
+docker exec workdir-container pwd
+
+docker exec workdir-container \
+  ls -l /app/app.sh
+```
+
+Output atteso:
+
+```text
+Current directory: /app
+Hello from Dockerfile
+```
+
+### Soluzione
+
+```dockerfile
+FROM alpine:3.20
+
+WORKDIR /app
+
+COPY app.sh .
+
+RUN chmod +x app.sh
+
+CMD ["./app.sh"]
+```
+
+```sh
+docker build -t workdir-app:v1 .
+
+docker run -d \
+  --name workdir-container \
+  workdir-app:v1
+```
+
+### Cleanup
+
+```sh
+docker rm -f workdir-container
+docker rmi -f workdir-app:v1
+rm -rf /tmp/docker-14
+```
+
+---
+
+## Docker-15 — Volume nominato
+
+### Preparazione ambiente
+
+```sh
+docker rm -f volume-test volume-check 2>/dev/null || true
+docker volume rm webdata 2>/dev/null || true
+
+docker volume create webdata
+```
+
+### Task
+
+Avviare un container nginx:
+
+* nome: `volume-test`;
+* immagine: `nginx:1.27`;
+* volume: `webdata`;
+* mount path: `/usr/share/nginx/html`.
+
+Scrivere nel volume il file:
+
+```text
+/usr/share/nginx/html/index.html
+```
+
+con contenuto:
+
+```text
+Persistent Docker volume
+```
+
+Eliminare il container e verificare che il dato sia ancora presente usando un secondo container.
+
+### Validazione
+
+```sh
+docker volume inspect webdata
+```
+
+Il secondo container deve stampare:
+
+```text
+Persistent Docker volume
+```
+
+### Soluzione
+
+```sh
+docker run -d \
+  --name volume-test \
+  -v webdata:/usr/share/nginx/html \
+  nginx:1.27
+
+docker exec volume-test \
+  sh -c "printf '%s\n' 'Persistent Docker volume' > /usr/share/nginx/html/index.html"
+
+docker rm -f volume-test
+
+docker run --rm \
+  --name volume-check \
+  -v webdata:/data \
+  alpine:3.20 \
+  cat /data/index.html
+```
+
+### Cleanup
+
+```sh
+docker rm -f volume-test volume-check 2>/dev/null || true
+docker volume rm webdata
+```
+
+---
+
+## Docker-16 — Build, Tag, Push, Pull e Run
+
+### Preparazione ambiente
+
+```sh
+mkdir -p /tmp/docker-16
+cd /tmp/docker-16
+```
+
+Creare `index.html`:
+
+```sh
+cat > index.html <<'EOF'
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Docker Hub Lab</title>
+</head>
+<body>
+  <h1>Image pulled from Docker Hub</h1>
+</body>
+</html>
+EOF
+```
+
+Creare il Dockerfile:
+
+```sh
+cat > Dockerfile <<'EOF'
+FROM nginx:1.27-alpine
+
+COPY index.html /usr/share/nginx/html/index.html
+
+EXPOSE 80
+EOF
+```
+
+Pulire eventuali risorse:
+
+```sh
+docker rm -f docker-hub-test 2>/dev/null || true
+docker rmi -f docker-hub-app:v1 2>/dev/null || true
+docker rmi -f <DOCKERHUB_USER>/docker-lab:v2 2>/dev/null || true
+```
+
+### Task
+
+Eseguire l’intero flusso:
+
+1. build dell’immagine `docker-hub-app:v1`;
+2. tag come `<DOCKERHUB_USER>/docker-lab:v2`;
+3. push su Docker Hub;
+4. rimozione delle immagini locali;
+5. pull dal Docker Hub;
+6. avvio del container sulla porta host `8080`;
+7. verifica della pagina.
+
+### Validazione
+
+```sh
+docker images <DOCKERHUB_USER>/docker-lab:v2
+
+docker ps --filter name=docker-hub-test
+
+curl http://localhost:8080
+```
+
+Output atteso:
+
+```text
+Image pulled from Docker Hub
+```
+
+### Soluzione
+
+```sh
+docker build \
+  -t docker-hub-app:v1 \
+  .
+
+docker tag \
+  docker-hub-app:v1 \
+  <DOCKERHUB_USER>/docker-lab:v2
+
+docker login
+
+docker push \
+  <DOCKERHUB_USER>/docker-lab:v2
+
+docker rmi -f docker-hub-app:v1
+docker rmi -f <DOCKERHUB_USER>/docker-lab:v2
+
+docker pull \
+  <DOCKERHUB_USER>/docker-lab:v2
+
+docker run -d \
+  --name docker-hub-test \
+  -p 8080:80 \
+  <DOCKERHUB_USER>/docker-lab:v2
+```
+
+### Cleanup
+
+```sh
+docker rm -f docker-hub-test
+
+docker rmi -f \
+  <DOCKERHUB_USER>/docker-lab:v2
+
+docker logout
+
+rm -rf /tmp/docker-16
+```
 
 ---

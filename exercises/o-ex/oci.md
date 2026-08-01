@@ -719,7 +719,7 @@ rm -f crash-pod.yaml
 ```
 
 ---
-# Docker (CKAD) — 10 esercizi
+### Docker (CKAD) 
 
 > Esercizi autonomi sull’utilizzo di Docker per immagini OCI e container.
 
